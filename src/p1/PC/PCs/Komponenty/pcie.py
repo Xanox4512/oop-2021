@@ -3,27 +3,27 @@ from dataclasses import dataclass
 
 @dataclass
 class PCIeDevice:
-    gen: int = 4
+    __gen: int = 4
 
 
 class PCIeSlot:
-    gen: int = 4
-    device: PCIeDevice
+    __gen: int = 4
+    __device: PCIeDevice
 
     def insert_device(self, device: PCIeDevice):
-        self.device = device
+        self.__device = device
 
     def get_device(self) -> PCIeDevice:
-        return self.device
+        return self.__device
 
     def remove_device(self):
-        self.device = None
+        self.__device = None
 
 
 class GraphicsCard(PCIeDevice):
-    cores: int
-    frequency: int
-    memory_gb: int
+    __cores: int
+    __frequency: int
+    __memory_gb: int
 
 
 class NvidiaGraphicsCard(GraphicsCard):

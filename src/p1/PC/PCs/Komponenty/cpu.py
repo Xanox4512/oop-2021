@@ -3,9 +3,9 @@ from dataclasses import dataclass
 
 @dataclass
 class CPU:
-    frequency: int = 4000
-    cores: int = 16
-    cache: int = 128
+    __frequency: int = 4000
+    __cores: int = 16
+    __cache: int = 128
 
 
 class AMD_CPU(CPU):
