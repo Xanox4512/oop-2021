@@ -23,6 +23,9 @@ class Db:
         """
         raise NotImplemented()
 
+    def add_user(self, u: User):
+        return self.all_users() + u()
+
 
 class AuthChecker:
     db: Db
@@ -45,14 +48,16 @@ if __name__ == '__main__':
     # users = db.all_users()
 
     db.all_users = MagicMock(
-        return_value=[User(2, 'Xi'), User(5, 'Jair')])  # podmieniamy prawdziwą metodę, i piszemy co ma zwrócić
+        return_value=[User(2, 'Jair'), User(5, 'Jair')])  # podmieniamy prawdziwą metodę, i piszemy co ma zwrócić
 
     # db.all_users.side_effect = [[User(2,'Xi')], []]   # todo: multiple values
 
     print(db.all_users())
+    print(auth.is_user(2))
     db.all_users = MagicMock(return_value=[])  # podmieniamy prawdziwą metodę, i piszemy co ma zwrócić
     print(db.all_users())
-    # print(auth.is_user(11))
+    print(auth.is_user(2))
+    print(db.add_user('Tomasz'))
 
     # print(db.all_users.mock_calls)  # z tego można zobaczyć jakie zapytania do metody `all_users` zostały wykonane
     # db.all_users.assert_called()    # rzuci błędem, jeśli ta metoda nie została uruchomiona
