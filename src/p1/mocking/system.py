@@ -31,7 +31,7 @@ class AuthChecker:
         self.db = db
 
     def is_user(self, id: int):
-        user_ids = [u.id for u in db.all_users()]
+        user_ids = [u.id for u in self.db.all_users()]
         return id in user_ids
 
 
