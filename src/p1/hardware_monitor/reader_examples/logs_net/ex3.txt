@@ -1,0 +1,17 @@
+Inter-|   Receive                                                |  Transmit
+ face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+veth200f295:       0       0    0    0    0     0          0         0     7793      77    0    0    0     0       0          0
+virbr0:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+vmnet1:       0       0    0    0    0     0          0         0        0      81    0    0    0     0       0          0
+br-bb240e0a7713:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+  tun0:       0       0    0    0    0     0          0         0      336       7    0    0    0     0       0          0
+enp5s0: 45046835  208216    0    3    0     0          0      2820 375005912  394880    0    0    0     0       0          0
+vmnet8:       0       0    0    0    0     0          0         0        0      80    0    0    0     0       0          0
+docker_gwbridge:  147510    1884    0    0    0     0          0         0   507737    1744    0    0    0     0       0          0
+vboxnet0:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+vethd4b15d4:       0       0    0    0    0     0          0         0    11443     102    0    0    0     0       0          0
+docker0:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+vethc9271d8:  173886    1884    0    0    0     0          0         0   509015    1766    0    0    0     0       0          0
+virbr0-nic:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+veth234fe66:       0       0    0    0    0     0          0         0     7793      77    0    0    0     0       0          0
+    lo:  559354    8593    0    0    0     0          0         0   559354    8593    0    0    0     0       0          0
