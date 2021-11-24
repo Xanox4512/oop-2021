@@ -1,0 +1,11 @@
+critical_warning
+temperature
+data_units_written
+percentage_used
+power_cycles
+temperature_sensor_1
+temperature_sensor_2
+thermal_management_t1_trans_count
+thermal_management_t2_trans_count
+thermal_management_t1_total_time
+thermal_management_t2_total_time
