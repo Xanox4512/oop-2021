@@ -14,10 +14,10 @@ power_on_hours                      : 13 600
 unsafe_shutdowns                    : 25
 media_errors                        : 0
 num_err_log_entries                 : 0
-Warning Temperature Time            : 0
-Critical Composite Temperature Time : 0
-Temperature Sensor 1                : 38 C
-Thermal Management T1 Trans Count   : 0
-Thermal Management T2 Trans Count   : 0
-Thermal Management T1 Total Time    : 0
-Thermal Management T2 Total Time    : 0
+warning_temperature_time            : 0
+critical_Composite_temperature_time : 0
+temperature_sensor_1                : 38 C
+thermal_management_t1_trans_count   : 0
+thermal_management_t2_trans_count   : 0
+thermal_management_t1_total_time    : 0
+thermal_management_t2_total_time    : 0
