@@ -1,8 +1,10 @@
+import os.path
 from asyncio import sleep
 from random import randint
 
 from aiohttp import web
 from aiohttp.abc import BaseRequest
+from aiohttp.web_middlewares import middleware
 from faker import Faker
 
 routes = web.RouteTableDef()
@@ -20,29 +22,21 @@ async def hello(request):
     print('request received')
     return web.json_response({'comment': f'hello, x={12}!'})
 
-
-@routes.get('/welcome')
-async def welcome(request):
-    name = request.rel_url.query['name']
-    await sleep(1.2)
-    print(f'welcome request received for {name}')
-    return web.json_response({'comment': f'hello {name}!'})
-
-
-@routes.get('/users/{userid}/details')
-async def welcome(request):
-    # http://0.0.0.0:8888/users/i8811/details
-    userid = request.match_info.get('userid', '')
-    fake = Faker()
-    user_name = fake.name()
-    user_address = fake.address().replace('\n',', ')
-    resp = {'userid': userid, 'name': user_name, 'address': user_address}
-    return web.json_response(resp)
-
+@middleware
+async def middleware(request, handler):
+    # "opakowuje" każdy request... można tu zrobić try... expect...
+    print(f'request: {request}')
+    resp = await handler(request)
+    print(f'response: {resp.status}')
+    return resp
 
 @routes.get('/serve')
-async def serve_file(req):
-    return web.FileResponse('images/bio1.jpg')
+async def serve_file(request):
+    filename = request.rel_url.query.get('filename', '')
+    path = f'images/{filename}'
+    if '..' in filename or '/' in filename or "\\" in filename or not os.path.isfile(path):
+        raise RuntimeError('Invalid filename')
+    return web.FileResponse(f'images/{filename}')
 
 @routes.post('/upload')
 async def accept_file(req: BaseRequest):
@@ -90,6 +84,6 @@ async def starter():
     return app
 
 
-app = web.Application()
+app = web.Application(middlewares=[middleware])
 app.add_routes(routes)
 web.run_app(starter(), port=8888)  # ewentu

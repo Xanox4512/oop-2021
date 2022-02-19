@@ -23,7 +23,7 @@ async def download():
 async def upload():
     # client upload to url
     session = aiohttp.ClientSession()
-    files = {'file': open('images/bio1.jpg', 'rb')}
+    files = {'file': open('eso1907a.jpg', 'rb')}
     await session.post('http://localhost:8888/upload', data=files)
     await session.close()
 
