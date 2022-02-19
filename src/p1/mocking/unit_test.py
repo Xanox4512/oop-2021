@@ -6,6 +6,8 @@ from unittest.mock import MagicMock, Mock, call
 class Calculator:
     def add(self, a, b):
         return a + b
+    def sub(self, a, b):
+        return a - b
 
 
 class TestSum(unittest.TestCase):
@@ -13,7 +15,10 @@ class TestSum(unittest.TestCase):
     def test_sum(self):
         c = Calculator()
         c.add = MagicMock(return_value=5)
-        self.assertEqual(c.add(2, 2), 5, 'Używamy wartości zwracanych z mock-a, a nie klasy')
+        self.assertEqual(c.add(2, 2), 5, '?')
+        self.assertEqual(c.sub(2,2), 0, '?')
+        print(type(c.add))
+        print(type(c.sub))
 
     def test_called(self):
         m = Mock()

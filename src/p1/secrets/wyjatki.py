@@ -5,11 +5,14 @@ def foo(n):
 
 
 def goo(n):
-    # funkcja powinna zwrócić krytyczny błąd gdy n=3....
     if n == 3:
         raise RuntimeError('błąd!!! n nigdy nie może być równe 3')
     print(f'goo with n={n}')
     print('ok zakończyłem goo')
+
+goo(2)
+goo(3)
+goo(4)
 
 
 if __name__ == '__main__':
