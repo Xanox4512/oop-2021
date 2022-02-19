@@ -4,12 +4,12 @@ import re
 class CPUTempParser:
 
     def __init__(self, filename):
-        self.fiiledata = open(filename).read()
+        self.filedata = open(filename).read()
 
     def cpu_temp(self):
 
         intel_temp_pattern = re.compile(r'Core\s\d*:\s*\+(\d*.\d*).*')
-        amd_temp_pattern = re.compile(r'Tdie:\s*.(\d*\.\d*).*')
+        amd_temp_pattern = re.compile(r'.*\:\s*.(\d*\.\d*).*\s\(high\.*')
 
         temp = 0.0
 
@@ -23,11 +23,13 @@ class CPUTempParser:
         return temp
 
 
-parser1 = CPUTempParser("reader_examples/logs_cpu_temp/AMDTemp.txt")
-print(parser1.cpu_temp())
+if __name__ == '__main__':
 
-parser2 = CPUTempParser("reader_examples/logs_cpu_temp/IntelTemp.txt")
-print(parser2.cpu_temp())
+    parser1 = CPUTempParser("reader_examples/logs_cpu_temp/AMDTemp.txt")
+    print(parser1.cpu_temp())
+
+    parser2 = CPUTempParser("reader_examples/logs_cpu_temp/IntelTemp.txt")
+    print(parser2.cpu_temp())
 
 #https://docs.python.org/3/howto/regex.html
 

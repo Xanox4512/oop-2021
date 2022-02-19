@@ -4,6 +4,7 @@ from random import randint
 from aiohttp import web
 from aiohttp.abc import BaseRequest
 from faker import Faker
+import os.path
 
 routes = web.RouteTableDef()
 
@@ -21,28 +22,14 @@ async def hello(request):
     return web.json_response({'comment': f'hello, x={12}!'})
 
 
-@routes.get('/welcome')
-async def welcome(request):
-    name = request.rel_url.query['name']
-    await sleep(1.2)
-    print(f'welcome request received for {name}')
-    return web.json_response({'comment': f'hello {name}!'})
-
-
-@routes.get('/users/{userid}/details')
-async def welcome(request):
-    # http://0.0.0.0:8888/users/i8811/details
-    userid = request.match_info.get('userid', '')
-    fake = Faker()
-    user_name = fake.name()
-    user_address = fake.address().replace('\n',', ')
-    resp = {'userid': userid, 'name': user_name, 'address': user_address}
-    return web.json_response(resp)
-
-
-@routes.get('/serve')
+@routes.get('/serve/{filename}')
 async def serve_file(req):
-    return web.FileResponse('images/bio1.jpg')
+    filename = req.rel_url.query.get('filename', '')
+    if not os.path.isfile(f'images/{filename}'):
+        raise FileNotFoundError('Nie znaleziono podanego pliku')
+    if '..' in filename or '/' in filename or '\\' in filename:
+        raise RuntimeError('Invalid Filename')
+    return web.FileResponse(f'images/{filename}.jpg')
 
 @routes.post('/upload')
 async def accept_file(req: BaseRequest):
