@@ -1,6 +1,6 @@
 import asyncio
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 
 import aiohttp
 
@@ -10,6 +10,20 @@ class WdToken:
     studentid: int
     wdauth: str
     expiry_epoch_s: int
+
+@dataclass
+class User:
+    studentid: int
+    album: str
+    imie: str
+    nazwisko: str
+
+    @staticmethod
+    def from_dict(d: dict) -> 'User':
+        pola = []
+        for field in fields(User):
+            pola.append(field.name)
+        return User(**{ a: b for a, b in d.items() if a in pola })
 
 
 class UnauthorizedError(BaseException):
@@ -24,6 +38,11 @@ class UnknownError(BaseException):
 async def hash_password(password):
     return hashlib.md5(password.encode()).hexdigest()
 
+async def get_user(wdauth: str):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'https://wdauth.wsi.edu.pl/user?wdauth={wdauth}') as res:
+            received_data = await res.json()
+            return User.from_dict(received_data)
 
 async def login_user(album: str, password: str) -> WdToken:
     _hash = await hash_password(password)
@@ -41,8 +60,10 @@ async def login_user(album: str, password: str) -> WdToken:
 
 
 async def main():
-    token = await login_user('kurs01', '...') #f6b22d5e-a9df-4a36-8ae4-f347657faaf6
-    print(token)
+    # token = await login_user('kurs01', '...') #f6b22d5e-a9df-4a36-8ae4-f347657faaf6
+    # print(token)
+
+    print(await get_user('f6b22d5e-a9df-4a36-8ae4-f347657faaf6'))
 
 if __name__ == '__main__':
     asyncio.run(main())
