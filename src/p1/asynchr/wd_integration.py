@@ -1,6 +1,8 @@
 import asyncio
 import hashlib
+from asyncache import cached
 from dataclasses import dataclass, fields
+from cachetools import TTLCache
 
 import aiohttp
 
@@ -38,25 +40,27 @@ class UnknownError(BaseException):
 async def hash_password(password):
     return hashlib.md5(password.encode()).hexdigest()
 
+@cached(TTLCache(100, 180))
 async def get_user(wdauth: str):
     async with aiohttp.ClientSession() as session:
         async with session.get(f'https://wdauth.wsi.edu.pl/user?wdauth={wdauth}') as res:
             received_data = await res.json()
             return User.from_dict(received_data)
 
-async def login_user(album: str, password: str) -> WdToken:
-    _hash = await hash_password(password)
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f'https://wdauth.wsi.edu.pl/authenticate?album={album}&pass={_hash}') as resp:
-            if resp.status == 200:
-                data = await resp.json()
-                return WdToken(studentid=data['token']['studentid'],
-                               wdauth=data['token']['wdauth'],
-                               expiry_epoch_s=data['token']['expiry_epoch_s'])
-            elif resp.status == 401:
-                raise UnauthorizedError
-            else:
-                raise UnknownError
+class UserService:
+    async def login_user(album: str, password: str) -> WdToken:
+        _hash = await hash_password(password)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f'https://wdauth.wsi.edu.pl/authenticate?album={album}&pass={_hash}') as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    return WdToken(studentid=data['token']['studentid'],
+                                   wdauth=data['token']['wdauth'],
+                                   expiry_epoch_s=data['token']['expiry_epoch_s'])
+                elif resp.status == 401:
+                    raise UnauthorizedError
+                else:
+                    raise UnknownError
 
 
 async def main():
