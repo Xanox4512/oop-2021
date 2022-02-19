@@ -1,8 +1,10 @@
+import os.path
 from asyncio import sleep
 from random import randint
 
 from aiohttp import web
 from aiohttp.abc import BaseRequest
+from aiohttp.web_middlewares import middleware
 from faker import Faker
 import os.path
 
@@ -21,6 +23,7 @@ async def hello(request):
     print('request received')
     return web.json_response({'comment': f'hello, x={12}!'})
 
+<<<<<<< HEAD
 
 @routes.get('/serve/{filename}')
 async def serve_file(req):
@@ -30,6 +33,23 @@ async def serve_file(req):
     if '..' in filename or '/' in filename or '\\' in filename:
         raise RuntimeError('Invalid Filename')
     return web.FileResponse(f'images/{filename}.jpg')
+=======
+@middleware
+async def middleware(request, handler):
+    # "opakowuje" każdy request... można tu zrobić try... expect...
+    print(f'request: {request}')
+    resp = await handler(request)
+    print(f'response: {resp.status}')
+    return resp
+
+@routes.get('/serve')
+async def serve_file(request):
+    filename = request.rel_url.query.get('filename', '')
+    path = f'images/{filename}'
+    if '..' in filename or '/' in filename or "\\" in filename or not os.path.isfile(path):
+        raise RuntimeError('Invalid filename')
+    return web.FileResponse(f'images/{filename}')
+>>>>>>> a54bed5d10656b49d10a69c65dcbbf402871731c
 
 @routes.post('/upload')
 async def accept_file(req: BaseRequest):
@@ -77,6 +97,6 @@ async def starter():
     return app
 
 
-app = web.Application()
+app = web.Application(middlewares=[middleware])
 app.add_routes(routes)
 web.run_app(starter(), port=8888)  # ewentu
