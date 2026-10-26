@@ -14,7 +14,7 @@ Do podglądu w przeglądarce uruchom w tym katalogu `python3 -m http.server 8080
 - Oryginalna struktura Design Component (`x-dc`), React i `support.js`.
 - Cztery przykładowe postacie oraz piąte wolne miejsce.
 - Wybór postaci, otwieranie i zamykanie księgi, animacje stron oraz obsługa szybkiego przełączania.
-- Ustawienia powierzchni skóry, porów, zużycia i tempa animacji.
+- Ustawienie tempa animacji; wygląd materiałów księgi został zastąpiony nowymi teksturami.
 
 Domyślnie otwarta jest karta Jessego, jak w koncepcie. Powrót do widoku ogólnego zamyka księgę; ponowny wybór postaci ją otwiera. Scena w tle jest dekoracyjna, zgodnie z koncepcją; nie jest podglądem modelu postaci z gry.
 
@@ -51,7 +51,8 @@ W zwykłej przeglądarce pojawia się dyskretny komunikat diagnostyczny, żeby n
 - `t2/vellum.css`: nowa warstwa wizualna; bazowy `t2/almanach.css` pozostaje bez zmian.
 - `vellum-shell.js`: proporcjonalne skalowanie planszy 1920 × 1080 i przytrzymanie przycisku wyjścia.
 - `assets/frontier-scene.png`: wygenerowane tło inspirowane przesłanym konceptem.
-- `assets/frontier-etching.svg`: dekoracyjna ilustracja farmy.
+- `assets/frontier-etching.svg`: dekoracyjna ilustracja farmy na kartach.
+- `assets/book-leather.png` i `assets/book-paper.png`: tekstury zużytej skórzanej oprawy i pergaminu z ryciną, wygenerowane do drugiej wersji księgi.
 - `assets/fonts/`: lokalne Playfair Display i Libre Baskerville wraz z licencjami OFL.
 
 Sprawdzenie w Chromium obejmuje wybór kart, pieczęć, animacje, szybkie przełączanie, zamykanie/otwieranie księgi, zdarzenia przycisków, anulowanie przytrzymania, obsługę klawiatury i skalowanie przy rozdzielczościach 1280×720, 1366×768, 1669×936, 1920×1080, 2560×1440 oraz 2560×1080. Test w faktycznym CEF RedM wymaga serwera użytkownika.
