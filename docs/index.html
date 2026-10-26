@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Vellum Roleplay — Wybór postaci</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./t2/almanach.css">
+<script src="./vellum-shell.js" defer></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+.t4k{--k:1}.t4k.k3{--k:3}
+.s80{--seal:80px}
+.pA .pp{filter:url(#fpA) drop-shadow(0 6px 11px rgba(0,0,0,.5))}
+.oD .bk{filter:url(#flth) drop-shadow(0 14px 24px rgba(0,0,0,.6))}
+.kC .pri{filter:url(#fstamp)}
+.kC .hd .hf{filter:url(#frough)}
+.pname{font-family:var(--display);font-weight:900;font-size:44px;line-height:1.05}
+.pnick{margin-top:4px;font-style:italic;font-size:19px;color:var(--ink-soft)}
+.t4k button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;text-align:left;cursor:pointer}
+.t4k .desc{margin-top:6px;font-size:15px;color:#3a2f24}
+.t4k .desc.empty{font-style:italic;color:var(--ink-soft)}
+.t4k .desc .dc{float:none;margin:0 1px 0 0;font-family:var(--script);font-size:1.6em;line-height:0;color:var(--ox)}
+
+/* Strony księgi wzdłuż dołu ekranu; wybrana uniesiona z pieczęcią (jak E4 · 5) */
+.cards{position:absolute;left:166px;top:856px;z-index:2;display:flex;gap:22px;align-items:flex-end}
+.t4k .cards .card{position:relative;transition:transform .15s ease-out}
+.t4k .cards .card:hover{transform:translateY(-8px)}
+.t4k .cards .card.up{transform:translateY(-22px);z-index:2}
+.t4k .cards .card.free{cursor:default}
+.t4k .cards .card.free:hover{transform:none}
+.t4k.zC .card .zf::before{inset:7px;width:auto;background:none;border:1px solid rgba(30,24,18,.3)}
+.t4k .card .nm{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.t4k .card.up>.in{padding-right:calc(var(--seal) * .8 + 24px)}
+.sa{position:absolute;z-index:5;right:14px;top:calc(50% - var(--seal) / 2);width:var(--seal);height:var(--seal);transform:rotate(-6deg);pointer-events:none}
+.seal{display:block;width:100%;height:100%;overflow:visible;transform-origin:48.5% 48.5%;animation:stamp calc(.78s * var(--k)) ease-out both}
+@keyframes stamp{0%{transform:scale(1.3);opacity:0}20%{transform:scale(1.18);opacity:1}55%{transform:scale(.95);opacity:1}100%{transform:scale(1);opacity:1}}
+
+/* Księga (wybory z E4 · 5: zamknięta C, otwarcie A, przewracanie A, nalepka R) */
+.lg{position:absolute;left:1300px;top:60px;width:620px;height:720px;z-index:1;transform-origin:100% 100%;transition:transform calc(.45s * var(--k)) cubic-bezier(.3,.1,.25,1) calc(.55s * var(--k))}
+.lg.open{transition-delay:0s}
+.lg:not(.open){transform:translate(150px,30px) rotate(-4deg)}
+.lg-in{position:absolute;inset:0}
+.lg-back{position:absolute;inset:-32px 0 -36px -38px;z-index:0;overflow:hidden;border-radius:7px 0 0 7px}
+.lg-edge{position:absolute;inset:-4px 0 -5px -5px;z-index:0;border-radius:3px 0 0 3px;background:linear-gradient(90deg,#86754f,#ad9a6c 20%,#c4b48b 35%,#a38f63 55%,#86754f 80%,#9a875c)}
+.t4k .lg-pg{inset:0}
+.t4k .lg .pp{filter:url(#fpA);border-radius:4px 0 0 4px}
+.t4k .lg-pg>.in{padding:30px 78px 26px 42px}
+.lg-gut{position:absolute;top:0;bottom:0;right:0;z-index:3;width:110px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(60,40,20,.14) 50%,rgba(40,25,10,.38) 88%,rgba(30,18,8,.5))}
+.lg-pg-b .lg-gut{right:auto;left:0;background:linear-gradient(270deg,transparent,rgba(60,40,20,.14) 50%,rgba(40,25,10,.38) 88%,rgba(30,18,8,.5))}
+.t4k .lg-pg-b>.pp{border-radius:0 4px 4px 0}
+.lg-hb{position:absolute;right:-22px;z-index:7;width:44px;height:9px;border-radius:2px;background:linear-gradient(rgba(255,246,222,.3),transparent 45%,rgba(0,0,0,.4)),#5a3820;box-shadow:0 1px 2px rgba(0,0,0,.45)}
+.lg-hb.t{top:-7px}.lg-hb.b{bottom:-7px}
+.lg-cover{position:absolute;inset:-32px 0 -36px -38px;z-index:8;transform-origin:100% 50%;transform-style:preserve-3d;transform:perspective(2600px) rotateY(0deg);transition:transform calc(.75s * var(--k)) cubic-bezier(.15,.45,.45,1)}
+.lg.open .lg-cover{transform:perspective(2600px) rotateY(180deg);transition-timing-function:cubic-bezier(.5,.08,.8,.55);transition-delay:calc(.3s * var(--k))}
+.lg-cv{position:absolute;inset:0;overflow:hidden;border-radius:7px 0 0 7px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.lg-cv.b{transform:rotateY(180deg);border-radius:0 7px 7px 0}
+.lg-cv .lth{position:absolute;inset:0;background:radial-gradient(120% 90% at 38% 28%,#7a4e2e,#583822 55%,#3a2414);filter:url(#flth)}
+.lg-cv.f::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,transparent 92%,rgba(0,0,0,.28));pointer-events:none}
+.lg-cv .ep{position:absolute;inset:14px 14px 14px 4px;border-radius:2px;background:radial-gradient(ellipse 40px 22px at 20% 30%,rgba(125,31,22,.22),transparent 70%),radial-gradient(ellipse 60px 30px at 70% 60%,rgba(40,60,70,.18),transparent 70%),radial-gradient(ellipse 50px 26px at 40% 85%,rgba(125,31,22,.18),transparent 70%),repeating-linear-gradient(115deg,rgba(90,60,30,.06) 0 6px,transparent 6px 14px),#ddcca6;box-shadow:inset 0 0 18px rgba(80,50,20,.35)}
+
+/* Nalepka R: papier, drukowany ozdobnik, Italianno niebieskoczarnym atramentem, lniane tasiemki w dwóch rogach */
+.lb{position:absolute;left:50%;z-index:2;text-align:center;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.45))}
+.lb::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 100% at 50% 45%,transparent 55%,rgba(110,72,30,.38)),linear-gradient(170deg,rgba(255,250,235,.3),transparent 50%),#e2d1aa;filter:url(#fpA)}
+.t4k .lb b{display:block;font-weight:400;color:#1e1812}
+.nP{top:174px;width:262px;margin-left:-131px;padding:32px 20px 18px;transform:rotate(-2.4deg)}
+.nP::before{border-radius:3px}
+.nP::after{content:"~ ❧ ~";position:absolute;left:0;right:0;top:9px;font-family:var(--body);font-size:13px;color:rgba(30,24,18,.6)}
+.t4k .nP b{font-family:'Italianno',cursive;font-size:48px;line-height:.92;color:#26365e}
+.nR .tz{position:absolute;z-index:1;width:84px;height:18px;
+background:
+linear-gradient(180deg,rgba(60,40,15,.22),transparent 2px,transparent calc(100% - 2px),rgba(60,40,15,.26)),
+repeating-linear-gradient(90deg,rgba(255,250,232,.18) 0 1px,transparent 1px 2.5px),
+repeating-linear-gradient(55deg,rgba(80,60,32,.2) 0 1.2px,transparent 1.2px 3.4px),
+repeating-linear-gradient(0deg,rgba(90,68,38,.12) 0 1px,transparent 1px 2px),
+radial-gradient(60% 90% at 50% 50%,rgba(70,50,20,.10),transparent 70%),
+#c9b68c;
+box-shadow:inset 0 0 0 .5px rgba(70,50,20,.3);
+clip-path:polygon(3px 0,81px 0,84px 2px,80px 4px,83px 6px,81px 8px,84px 10px,80px 12px,83px 14px,81px 16px,82px 18px,2px 18px,0 16px,3px 14px,1px 12px,4px 10px,0 8px,3px 6px,1px 4px,4px 2px)}
+.nR .tz1{left:-28px;top:2px;transform:rotate(-42deg)}
+.nR .tz2{right:-28px;bottom:2px;transform:rotate(-42deg)}
+
+/* Przewracanie A: sztywna kartka obraca się wokół grzbietu */
+.lg-leaf{position:absolute;inset:0;transform-origin:100% 50%;transform-style:preserve-3d;pointer-events:none;animation-fill-mode:both;animation-duration:calc(.7s * var(--k))}
+.lg-leaf.lf-in{animation-name:leafIn}
+.lg-leaf.lf-out{animation-name:leafOut}
+@keyframes leafIn{0%{transform:perspective(2600px) rotateY(180deg);animation-timing-function:linear}30%{transform:perspective(2600px) rotateY(96deg);animation-timing-function:cubic-bezier(.2,.6,.35,1)}100%{transform:perspective(2600px) rotateY(0deg)}}
+@keyframes leafOut{0%{transform:perspective(2600px) rotateY(0deg);animation-timing-function:cubic-bezier(.55,0,.8,.45)}70%{transform:perspective(2600px) rotateY(84deg);animation-timing-function:linear}100%{transform:perspective(2600px) rotateY(180deg)}}
+.lg-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.lg-face.lg-face-b{transform:rotateY(180deg)}
+.lg-dim{position:absolute;inset:0;z-index:6;background:#140c05;opacity:0;pointer-events:none;animation-fill-mode:both;animation-timing-function:linear;animation-duration:calc(.7s * var(--k))}
+.lf-in>.lg-face>.lg-dim{animation-name:dimA}
+.lf-in>.lg-face.lg-face-b>.lg-dim{animation-name:dimB}
+.lf-out>.lg-face>.lg-dim{animation-name:dimC}
+.lf-out>.lg-face.lg-face-b>.lg-dim{animation-name:dimD}
+@keyframes dimA{0%,30%{opacity:.4}100%{opacity:0}}
+@keyframes dimB{0%{opacity:0}30%,100%{opacity:.4}}
+@keyframes dimC{0%{opacity:0}70%,100%{opacity:.4}}
+@keyframes dimD{0%,70%{opacity:.4}100%{opacity:0}}
+.lg-leafz{z-index:4}
+.lg-shd{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(20,12,6,.04),rgba(20,12,6,.42));animation-fill-mode:both;animation-timing-function:linear;animation-duration:calc(.7s * var(--k))}
+.shd-in{animation-name:shdIn}.shd-out{animation-name:shdOut}
+@keyframes shdIn{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+@keyframes shdOut{0%{opacity:0}40%{opacity:1}100%{opacity:0}}
+
+/* ===== Realizm okładki (E4 · 5b). Warstwy skóry są takie same na okładce i na spodniej okładce pod stroną:
+   skóra, płótno lub marmurek (C), patyna, tłoczenie (B), przetarcia, rysy, złocenia, światło, wypukły brzeg, okucia ===== */
+.t4k{--ey:0px;--ex:calc(var(--ey) * .4);--eb:#2a190d;--el:#6a4528;--brass-e:none}
+.gr1{--ey:12px}.gr2{--ey:20px}
+.ok1{--brass-e:linear-gradient(90deg,#6b4f1a,#e2c983 30%,#a8823a 70%,#6b4f1a)}
+.rvc.bkz{--eb:#1f2619;--el:#4a573d}
+.rvc.bkb{--eb:#33130f;--el:#6c2d25}
+.rvc.bkm{--eb:#262a33;--el:#56586a}
+.skin>i{position:absolute;inset:0;display:block;pointer-events:none}
+.skin svg{display:block;width:100%;height:100%;overflow:visible}
+.skin>.lth{background:radial-gradient(120% 90% at 38% 28%,#7a4e2e,#583822 55%,#3a2414);filter:url(#flth)}
+.rvb .skin>.lth{background:radial-gradient(130% 100% at 34% 24%,#76482a,#52301b 55%,#301c0e);filter:url(#flthb)}
+.skin>.g1{inset:10px;border:1.5px solid var(--gold);border-radius:4px}
+.skin>.g2{inset:15px;border:1px solid rgba(201,160,67,.55);border-radius:3px}
+.lg-back>.g1{inset:10px 0 10px 10px;border-right:0;border-radius:4px 0 0 4px}
+.lg-back>.g2{inset:15px 0 15px 15px;border-right:0;border-radius:3px 0 0 3px}
+.rva .skin>.g1{border-color:rgba(201,160,67,.82);filter:url(#fwear)}
+.rva .skin>.g2{filter:url(#fwear)}
+.rvc .skin>.g1,.rvc .skin>.g2{display:none}
+
+/* C: boki z płótna albo marmurku, skóra tylko w grzbiecie i na rogach; brzeg boku rzuca cień na skórę */
+.skin>.clothw{display:none;filter:drop-shadow(.6px .9px .6px rgba(0,0,0,.6))}
+.rvc .skin>.clothw{display:block}
+.clothw>.cloth{position:absolute;inset:0;clip-path:polygon(118px 0,470px 0,470px 100%,118px 100%,0 calc(100% - 118px),0 118px)}
+.bkz .cloth{background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 2.6px),repeating-linear-gradient(90deg,rgba(0,0,0,.1) 0 1px,transparent 1px 2.6px),#3c4832;filter:url(#fcl)}
+.bkb .cloth{background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 2.6px),repeating-linear-gradient(90deg,rgba(0,0,0,.1) 0 1px,transparent 1px 2.6px),#5e2821;filter:url(#fcl)}
+.bkm .cloth{background:#000;filter:url(#fmarb)}
+.skin>.fil{display:none}
+.rvc .skin>.fil{display:block}
+
+/* Patyna: duże, miękkie przebarwienia (ciemniejsze i wytarte, jaśniejsze plamy) */
+.skin>.mot{display:none;background:#000;filter:url(#fmot)}
+.rva .skin>.mot,.rvc .skin>.mot{display:block}
+.rvb .skin>.mot{display:block;opacity:.5}
+
+/* B: ślepe tłoczenie (rama, panel z narożnikami, romb) */
+.skin>.tool{display:none}
+.rvb .skin>.tool{display:block}
+
+/* Przetarcia brzegów i rogów: jaśniejsza, wytarta skóra o nierównej granicy */
+.skin>.wr{display:none;filter:url(#fwr);background:
+radial-gradient(84px 84px at 0 0,#000,rgba(0,0,0,.55) 45%,transparent),
+radial-gradient(84px 84px at 0 100%,#000,rgba(0,0,0,.55) 45%,transparent),
+radial-gradient(60px 60px at 100% 0,#000,transparent),
+radial-gradient(60px 60px at 100% 100%,#000,transparent),
+linear-gradient(90deg,rgba(0,0,0,.9),rgba(0,0,0,.3) 9px,transparent 24px),
+linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.3) 8px,transparent 20px),
+linear-gradient(0deg,rgba(0,0,0,.9),rgba(0,0,0,.3) 9px,transparent 24px)}
+.rva .skin>.wr{display:block;opacity:.8}
+.rvb .skin>.wr{display:block;opacity:.42}
+.rvc .skin>.wr{display:block;opacity:.75}
+
+.skin>.scr{display:none}
+.rva .skin>.scr,.rvc .skin>.scr{display:block}
+.rvb .skin>.scr{display:block;opacity:.35}
+
+/* Światło z lewej u góry, zabrudzenie od dłoni przy przednim brzegu, ciemniejszy dół; B z pasem połysku */
+.skin>.lit{display:none}
+.rva .skin>.lit,.rvc .skin>.lit{display:block;background:linear-gradient(140deg,rgba(255,222,170,.11),transparent 38%),radial-gradient(42% 30% at 0 58%,rgba(16,8,3,.34),transparent 72%),linear-gradient(0deg,rgba(0,0,0,.2),transparent 22%)}
+.rvb .skin>.lit{display:block;background:linear-gradient(116deg,transparent 20%,rgba(255,234,200,.14) 33%,rgba(255,234,200,.05) 42%,transparent 50%),linear-gradient(140deg,rgba(255,222,170,.08),transparent 38%),linear-gradient(0deg,rgba(0,0,0,.22),transparent 24%)}
+
+/* Brzeg: dziś równe przyciemnienie (jak w grze), w propozycjach zaokrąglony brzeg łapie światło u góry i z lewej */
+.skin>.bev{border-radius:inherit;box-shadow:inset 0 0 12px rgba(0,0,0,.5),inset -10px 0 15px rgba(0,0,0,.28)}
+.rv0 .lg-back>.bev{box-shadow:none}
+.rva .skin>.bev,.rvb .skin>.bev,.rvc .skin>.bev{box-shadow:inset 1px 1px 0 rgba(255,214,160,.24),inset 3px 3px 4px rgba(255,214,160,.08),inset -1px -1.5px 0 rgba(0,0,0,.5),inset -4px -5px 6px rgba(0,0,0,.32),inset 0 0 18px rgba(0,0,0,.38)}
+
+/* Mosiężne narożniki z patyną i nitami */
+.skin>.brs{display:none;inset:auto;left:0;width:78px;height:78px;filter:drop-shadow(.8px 1.4px 1px rgba(0,0,0,.6))}
+.ok1 .skin>.brs{display:block}
+.skin>.brs.btl{top:0}
+.skin>.brs.bbl{bottom:0}
+
+/* Cień pod księgą: dziś jeden miękki cień, z grubością cień przy krawędzi i szeroki rozmyty */
+.gr0 .lg-back{filter:drop-shadow(0 16px 26px rgba(0,0,0,.65))}
+.lg-sh{position:absolute;display:none;left:calc(-38px - var(--ex));top:-32px;right:0;bottom:calc(-36px - var(--ey));border-radius:8px 0 0 8px;box-shadow:0 2px 3px rgba(0,0,0,.45),0 10px 16px rgba(0,0,0,.38),0 24px 46px rgba(0,0,0,.42);pointer-events:none}
+.gr1 .lg-sh,.gr2 .lg-sh{display:block}
+
+/* Grubość: dolny i lewy bok księgi (kamera lekko z przodu i z lewej). Od góry: brzeg okładki (obraca się z nią),
+   blok kartek w cieniu okładki (wyblakłe złoto, warstwy kartek), brzeg spodniej okładki; po otwarciu sam brzeg
+   spodniej okładki i przód bloku kartek pod stroną */
+.sd{position:absolute;display:none;pointer-events:none}
+.gr1 .sd,.gr2 .sd{display:block}
+.sd.sdb{left:calc(-38px - var(--ex));right:0;top:756px;height:var(--ey);clip-path:polygon(var(--ex) 0,100% 0,100% 100%,0 100%)}
+.sd.sdl{left:calc(-38px - var(--ex));width:var(--ex);top:-32px;height:calc(788px + var(--ey));clip-path:polygon(100% 0,100% calc(100% - var(--ey)),0 100%,0 var(--ey))}
+.lg-cover>.sd{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.lg-cover>.sd.sdb{left:calc(0px - var(--ex));top:100%}
+.lg-cover>.sd.sdl{left:calc(0px - var(--ex));top:0;height:calc(100% + var(--ey))}
+.sd.sdv.sdb{background:var(--brass-e) var(--ex) 0/58px calc(var(--ey) * .28) no-repeat,linear-gradient(180deg,rgba(255,220,170,.14),transparent) 0 0/100% calc(var(--ey) * .12) no-repeat,linear-gradient(var(--eb),var(--eb)) 0 0/100% calc(var(--ey) * .28) no-repeat}
+.sd.sdv.sdl{background:linear-gradient(90deg,rgba(255,220,170,.12),transparent) 100% 0/calc(var(--ex) * .28) 100% no-repeat,linear-gradient(var(--el),var(--el)) 100% 0/calc(var(--ex) * .28) 100% no-repeat}
+.sd.sdc.sdb{background:
+linear-gradient(180deg,rgba(8,4,1,.65),rgba(8,4,1,0)) 0 calc(var(--ey) * .28)/100% calc(var(--ey) * .22) no-repeat,
+repeating-linear-gradient(180deg,rgba(50,34,12,.38) 0 .6px,transparent .6px 1.5px) 0 calc(var(--ey) * .28)/100% calc(var(--ey) * .42) no-repeat,
+linear-gradient(180deg,#6f5e3d,#8a7650) 0 calc(var(--ey) * .28)/100% calc(var(--ey) * .42) no-repeat,
+var(--brass-e) 0 100%/56px calc(var(--ey) * .3) no-repeat,
+linear-gradient(var(--eb),var(--eb)) 0 100%/100% calc(var(--ey) * .3) no-repeat}
+.sd.sdc.sdl{background:
+linear-gradient(270deg,rgba(8,4,1,.55),rgba(8,4,1,0)) calc(var(--ex) * .5) 0/calc(var(--ex) * .22) 100% no-repeat,
+linear-gradient(90deg,#8a7650,#a08b60) calc(var(--ex) * .3) 0/calc(var(--ex) * .42) 100% no-repeat,
+linear-gradient(var(--el),var(--el)) 0 0/calc(var(--ex) * .3) 100% no-repeat}
+.sd.sdo.sdb{background:linear-gradient(180deg,rgba(255,220,170,.12),transparent) 0 0/100% calc(var(--ey) * .1) no-repeat,var(--brass-e) var(--ex) 0/56px calc(var(--ey) * .3) no-repeat,linear-gradient(var(--eb),var(--eb)) 0 0/100% calc(var(--ey) * .3) no-repeat}
+.sd.sdo.sdl{background:linear-gradient(var(--el),var(--el)) 100% 0/calc(var(--ex) * .3) 100% no-repeat}
+.sd.sdc{opacity:1;transition:opacity calc(.15s * var(--k)) calc(.35s * var(--k))}
+.lg.open .sd.sdc{opacity:0;transition-delay:calc(.7s * var(--k))}
+.sd.sdo{opacity:0;transition:opacity calc(.15s * var(--k)) calc(.35s * var(--k))}
+.lg.open .sd.sdo{opacity:1;transition-delay:calc(.7s * var(--k))}
+.sd.sdpb{left:calc(-5px - var(--ex) * .42);right:0;top:725px;height:calc(var(--ey) * .42);clip-path:polygon(calc(var(--ex) * .42) 0,100% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(255,240,200,.22),transparent 30%,rgba(20,10,3,.35)),repeating-linear-gradient(180deg,rgba(50,34,12,.32) 0 .6px,transparent .6px 1.5px),linear-gradient(180deg,#8a7650,#a08b60 60%,#7d6a45)}
+.sd.sdpl{left:calc(-5px - var(--ex) * .42);width:calc(var(--ex) * .42);top:-4px;height:calc(729px + var(--ey) * .42);clip-path:polygon(100% 0,100% calc(100% - var(--ey) * .42),0 100%,0 calc(var(--ey) * .42));background:linear-gradient(90deg,#b5a074,#9a875c)}
+
+/* ===== E4 · 5c: gładka skóra cielęca tylko na wierzchu okładki (.lg-cv.f); spodnia okładka i reszta skór jak dziś.
+   Powierzchnia: 1 matowa, 2 półmatowa z połyskiem, 3 wygładzona dłońmi (połysk i mniej porów przy przednim brzegu);
+   pory drobne albo wyraźniejsze (skupione w płatach); zużycie lekkie albo średnie. Zawsze: barwa po garbowaniu,
+   patyna, drobne otarcia od blatu (najmocniej w 1), zabrudzenie przy przednim i dolnym brzegu, przetarte brzegi,
+   rysy, rowek zawiasu ze zmarszczkami i przetarciem przy końcach grzbietu, rowek wytłoczenia pod złoceniem.
+   Średnie dokłada: rogi przetarte do tektury, pęknięcia na zawiasie, zaciek, plamkę atramentu, wgniecenia, cienkie
+   rysy, otarcia, więcej ubytków złota. 2 i 3: połysk w płatach; 3: strefy dłoni przy przednim brzegu.
+   Dziś = wariant A z E4 · 5b (jak w grze) ===== */
+.pwc .lg-cv.f>.lth{filter:url(#fcalf)}
+.pw2 .lg-cv.f>.lth,.pw3 .lg-cv.f>.lth{filter:url(#fcalfs)}
+.lg-cv.f>.pores,.lg-cv.f>.ton,.lg-cv.f>.msc,.lg-cv.f>.grm,.lg-cv.f>.jnt,.lg-cv.f>.mrk,.lg-cv.f>.gv1,.lg-cv.f>.gv2,.lg-cv.f>.crn,.lg-cv.f>.crs,.lg-cv.f>.scf,.lg-cv.f>.shn,.lg-cv.f>.pol{display:none}
+.pwc .lg-cv.f>.pores{display:block;background:#000;filter:url(#fpore);opacity:.62}
+.pwc.po2 .lg-cv.f>.pores{filter:url(#fpore2);opacity:.8}
+.pw3 .lg-cv.f>.pores{-webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.3),#000 26%);mask-image:linear-gradient(90deg,rgba(0,0,0,.3),#000 26%)}
+.pwc .lg-cv.f>.wr{filter:url(#fwr2);background:
+radial-gradient(54px 54px at 0 0,#000,rgba(0,0,0,.5) 40%,transparent),
+radial-gradient(54px 54px at 0 100%,#000,rgba(0,0,0,.5) 40%,transparent),
+radial-gradient(40px 40px at 100% 0,#000,transparent),
+radial-gradient(40px 40px at 100% 100%,#000,transparent),
+linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 5px,transparent 14px),
+linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 5px,transparent 13px),
+linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 5px,transparent 14px)}
+.pwc.zu1 .lg-cv.f>.wr{opacity:.6}
+.pwc.zu2 .lg-cv.f>.wr{opacity:.85}
+.pwc.zu1 .lg-cv.f>.mot{opacity:.65}
+.pwc.zu1 .lg-cv.f>.scr{opacity:.55}
+.pwc .lg-cv.f>.crs{display:block;opacity:.75;filter:blur(.7px)}
+.pwc.zu2 .lg-cv.f>.crs{opacity:1}
+.pwc.zu2 .lg-cv.f>.scf{display:block;background:radial-gradient(30px 11px at 24% 72%,rgba(214,172,124,.15),transparent 70%),radial-gradient(20px 8px at 62% 17%,rgba(214,172,124,.12),transparent 70%),radial-gradient(46px 14px at 46% 90%,rgba(214,172,124,.11),transparent 70%),radial-gradient(14px 10px at 71% 41%,rgba(24,12,4,.22),transparent 70%)}
+/* Barwa po garbowaniu: płaty drobniejsze niż patyna, ciemniejsze i jaśniejsze */
+.pwc .lg-cv.f>.ton{display:block;background:#000;filter:url(#fton);opacity:.32}
+.pwc.zu2 .lg-cv.f>.ton{opacity:.42}
+/* Drobne otarcia od blatu: cienkie jasne kreski skupione w płatach, lekko skośnie (warstwa większa niż okładka) */
+.pwc .lg-cv.f>.msc{display:block;inset:-12%;background:#000;filter:url(#fmsc);transform:rotate(-8deg)}
+.pw1.zu1 .lg-cv.f>.msc{opacity:.45}
+.pw1.zu2 .lg-cv.f>.msc{opacity:.7}
+.pw2.zu1 .lg-cv.f>.msc{opacity:.3}
+.pw2.zu2 .lg-cv.f>.msc{opacity:.5}
+.pw3.zu1 .lg-cv.f>.msc{opacity:.25}
+.pw3.zu2 .lg-cv.f>.msc{opacity:.42}
+.pw3 .lg-cv.f>.msc{-webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.2),#000 32%);mask-image:linear-gradient(90deg,rgba(0,0,0,.2),#000 32%)}
+/* Zabrudzenie od dłoni przy przednim i dolnym brzegu, nierówna granica (warstwa wystaje poza okładkę o 20 px) */
+.pwc .lg-cv.f>.grm{display:block;inset:-20px;background:linear-gradient(90deg,rgba(14,7,2,.26) 20px,rgba(14,7,2,.08) 46px,transparent 78px),linear-gradient(0deg,rgba(14,7,2,.2) 20px,transparent 66px),linear-gradient(180deg,rgba(14,7,2,.1) 20px,transparent 50px);filter:url(#fwob);opacity:.7}
+.pwc.zu2 .lg-cv.f>.grm{opacity:1}
+/* Zawias: przetarta skóra wzdłuż rowka, najmocniej przy końcach grzbietu */
+.pwc .lg-cv.f>.jnt{display:block;inset:-20px 0;background:linear-gradient(90deg,transparent 604px,rgba(214,172,124,.1) 616px,rgba(214,172,124,.17) 625px,rgba(214,172,124,.07) 635px,transparent 648px);-webkit-mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.3) 20%,rgba(0,0,0,.12) 50%,rgba(0,0,0,.3) 80%,#000);mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.3) 20%,rgba(0,0,0,.12) 50%,rgba(0,0,0,.3) 80%,#000);filter:url(#fwob);opacity:.5}
+.pwc.zu2 .lg-cv.f>.jnt{opacity:1}
+/* Rowek wytłoczenia pod złoceniem: widać go tam, gdzie złoto się starło */
+.pwc .lg-cv.f>.gv1{display:block;inset:10px;border:1.5px solid rgba(16,8,3,.5);border-radius:4px;transform:translate(.5px,.6px)}
+.pwc .lg-cv.f>.gv2{display:block;inset:15px;border:1px solid rgba(16,8,3,.4);border-radius:3px;transform:translate(.5px,.6px)}
+.pwc .lg-cv.f>.g1,.pwc .lg-cv.f>.g2{filter:url(#fwearc)}
+.pwc.zu2 .lg-cv.f>.g1,.pwc.zu2 .lg-cv.f>.g2{filter:url(#fwearc2)}
+/* Średnie zużycie: zaciek, atrament, wgniecenia, cienkie rysy, pęknięcia na zawiasie; rogi przetarte do tektury */
+.pwc.zu2 .lg-cv.f>.mrk,.pwc.zu2 .lg-cv.f>.crn{display:block}
+/* 2 i 3: połysk w płatach, przerwany otarciami */
+.pw2 .lg-cv.f>.shn,.pw3 .lg-cv.f>.shn{display:block;background:linear-gradient(118deg,transparent 19%,rgba(255,232,196,.17) 30%,rgba(255,232,196,.05) 39%,transparent 49%),radial-gradient(55% 38% at 30% 18%,rgba(255,232,196,.07),transparent 70%);filter:url(#fshn)}
+/* 3: skóra wygładzona i ściemniona dłońmi przy przednim brzegu (chwyt przy otwieraniu, dolny i górny róg) */
+.pw3 .lg-cv.f>.pol{display:block;inset:-20px;background:radial-gradient(26px 118px at 32px 56%,rgba(255,238,206,.13),transparent 80%),radial-gradient(74px 160px at 20px 58%,rgba(255,230,190,.17),transparent 75%),radial-gradient(120px 86px at 34px 97%,rgba(255,230,190,.12),transparent 75%),radial-gradient(64px 92px at 20px 7%,rgba(255,230,190,.08),transparent 75%),radial-gradient(160px 240px at 20px 58%,rgba(18,9,3,.25),transparent 70%),radial-gradient(160px 120px at 34px 97%,rgba(18,9,3,.19),transparent 70%),radial-gradient(90px 110px at 20px 7%,rgba(18,9,3,.1),transparent 70%);filter:url(#fwob)}
+</style>
+<link rel="stylesheet" href="./t2/vellum.css">
+</helmet>
+<div class="{{cls}}" style="width: 1920px; height: 1080px">
+<svg width="0" height="0" style="position: absolute; width: 0; height: 0" aria-hidden="true" focusable="false">
+<defs>
+<filter id="fpA" x="-3%" y="-3%" width="106%" height="106%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.005 0.008" numOctaves="4" seed="21" result="m"></feTurbulence><feColorMatrix in="m" type="matrix" values="0 0 0 0 0.50  0 0 0 0 0.34  0 0 0 0 0.14  0.6 0 0 0 -0.27" result="mc"></feColorMatrix><feTurbulence type="fractalNoise" baseFrequency="0.01 0.4" numOctaves="2" seed="5" result="f"></feTurbulence><feColorMatrix in="f" type="matrix" values="0 0 0 0 0.42  0 0 0 0 0.31  0 0 0 0 0.16  0.25 0 0 0 -0.115" result="fc"></feColorMatrix><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="11" result="g"></feTurbulence><feColorMatrix in="g" type="matrix" values="0 0 0 0 0.30  0 0 0 0 0.21  0 0 0 0 0.11  0.22 0 0 0 -0.1" result="gc"></feColorMatrix><feMerge result="tx"><feMergeNode in="SourceGraphic"></feMergeNode><feMergeNode in="mc"></feMergeNode><feMergeNode in="fc"></feMergeNode><feMergeNode in="gc"></feMergeNode></feMerge><feComposite in="tx" in2="SourceAlpha" operator="in" result="cl"></feComposite><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="4" result="t"></feTurbulence><feDisplacementMap in="cl" in2="t" scale="4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="flth" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.11" numOctaves="4" seed="7" result="n"></feTurbulence><feDiffuseLighting in="n" surfaceScale="2.4" diffuseConstant="1.05" lighting-color="#ffffff" result="l"><feDistantLight azimuth="235" elevation="58"></feDistantLight></feDiffuseLighting><feComposite in="SourceGraphic" in2="l" operator="arithmetic" k1="1.25" k2="0" k3="0" k4="0" result="lc"></feComposite><feComposite in="lc" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="flthb" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.13" numOctaves="4" seed="7" result="n"></feTurbulence><feDiffuseLighting in="n" surfaceScale="1.6" diffuseConstant="1.05" lighting-color="#ffffff" result="l"><feDistantLight azimuth="235" elevation="62"></feDistantLight></feDiffuseLighting><feComposite in="SourceGraphic" in2="l" operator="arithmetic" k1="1.2" k2="0" k3="0" k4="0" result="lc"></feComposite><feSpecularLighting in="n" surfaceScale="1.6" specularConstant="0.55" specularExponent="18" lighting-color="#ffe9c8" result="s"><feDistantLight azimuth="235" elevation="55"></feDistantLight></feSpecularLighting><feComposite in="lc" in2="s" operator="arithmetic" k1="0" k2="1" k3="0.3" k4="0" result="all"></feComposite><feComposite in="all" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fmot" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.0035 0.005" numOctaves="4" seed="31" result="m"></feTurbulence><feColorMatrix in="m" type="matrix" values="0 0 0 0 0.10  0 0 0 0 0.05  0 0 0 0 0.02  1.25 0 0 0 -0.56" result="dk"></feColorMatrix><feTurbulence type="fractalNoise" baseFrequency="0.009 0.014" numOctaves="3" seed="44" result="m2"></feTurbulence><feColorMatrix in="m2" type="matrix" values="0 0 0 0 0.70  0 0 0 0 0.52  0 0 0 0 0.34  0.9 0 0 0 -0.52" result="lt"></feColorMatrix><feMerge result="mm"><feMergeNode in="dk"></feMergeNode><feMergeNode in="lt"></feMergeNode></feMerge><feComposite in="mm" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fwr" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="17" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" result="na"></feColorMatrix><feComposite in="SourceAlpha" in2="na" operator="arithmetic" k1="0" k2="1" k3="1.1" k4="-0.75" result="raw"></feComposite><feComponentTransfer in="raw" result="m"><feFuncA type="linear" slope="2.6" intercept="-0.1"></feFuncA></feComponentTransfer><feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="2" seed="3" result="g"></feTurbulence><feColorMatrix in="g" type="matrix" values="0.35 0 0 0 0.5  0.3 0 0 0 0.36  0.25 0 0 0 0.22  0 0 0 0 1" result="tan"></feColorMatrix><feComposite in="tan" in2="m" operator="in"></feComposite></filter>
+<filter id="fcl" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.42" numOctaves="2" seed="19" result="n"></feTurbulence><feDiffuseLighting in="n" surfaceScale="1.6" diffuseConstant="1" lighting-color="#ffffff" result="l"><feDistantLight azimuth="235" elevation="60"></feDistantLight></feDiffuseLighting><feComposite in="SourceGraphic" in2="l" operator="arithmetic" k1="1.3" k2="0" k3="0" k4="0" result="lc"></feComposite><feComposite in="lc" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fmarb" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.011" numOctaves="3" seed="8" result="w"></feTurbulence><feTurbulence type="fractalNoise" baseFrequency="0.011 0.028" numOctaves="2" seed="15" result="b"></feTurbulence><feDisplacementMap in="b" in2="w" scale="150" xChannelSelector="R" yChannelSelector="G" result="d"></feDisplacementMap><feColorMatrix in="d" type="matrix" values="2.4 0 0 0 -0.7  2.4 0 0 0 -0.7  2.4 0 0 0 -0.7  0 0 0 0 1" result="gr"></feColorMatrix><feComponentTransfer in="gr" result="c"><feFuncR type="discrete" tableValues="0.13 0.21 0.43 0.60 0.32 0.19"></feFuncR><feFuncG type="discrete" tableValues="0.14 0.27 0.22 0.48 0.25 0.23"></feFuncG><feFuncB type="discrete" tableValues="0.18 0.36 0.16 0.31 0.18 0.28"></feFuncB></feComponentTransfer><feGaussianBlur in="c" stdDeviation="0.8" result="cb"></feGaussianBlur><feComposite in="cb" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fpat" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="23" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.20  0 0 0 0 0.17  0 0 0 0 0.08  2.2 0 0 0 -1.05" result="p"></feColorMatrix><feComposite in="p" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="frough" x="-4%" y="-20%" width="108%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="2" result="t"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="t" scale="6" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="fstamp" x="-3%" y="-15%" width="106%" height="130%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="5" result="s"></feTurbulence><feColorMatrix in="s" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3.6 0 0 0 3.4" result="mk"></feColorMatrix><feComposite in="SourceGraphic" in2="mk" operator="in" result="er"></feComposite><feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="3" result="t"></feTurbulence><feDisplacementMap in="er" in2="t" scale="2.5" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="fwear" x="-5%" y="-10%" width="110%" height="120%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.6 0.35" numOctaves="3" seed="12" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -4 0 0 0 3.1" result="m"></feColorMatrix><feComposite in="SourceGraphic" in2="m" operator="in"></feComposite></filter>
+<filter id="fwear2" filterUnits="userSpaceOnUse" x="0" y="0" width="658" height="788" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.6 0.35" numOctaves="3" seed="12" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -4 0 0 0 3.1" result="m"></feColorMatrix><feComposite in="SourceGraphic" in2="m" operator="in"></feComposite></filter>
+<filter id="fcalf" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="13" result="u"></feTurbulence><feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="2" seed="7" result="f"></feTurbulence><feComposite in="u" in2="f" operator="arithmetic" k1="0" k2="1" k3="0.06" k4="0" result="h"></feComposite><feDiffuseLighting in="h" surfaceScale="3.2" diffuseConstant="1.04" lighting-color="#ffffff" result="l"><feDistantLight azimuth="235" elevation="60"></feDistantLight></feDiffuseLighting><feComposite in="SourceGraphic" in2="l" operator="arithmetic" k1="1.12" k2="0" k3="0" k4="0" result="lc"></feComposite><feComposite in="lc" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fcalfs" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="13" result="u"></feTurbulence><feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="2" seed="7" result="f"></feTurbulence><feComposite in="u" in2="f" operator="arithmetic" k1="0" k2="1" k3="0.06" k4="0" result="h"></feComposite><feDiffuseLighting in="h" surfaceScale="3.2" diffuseConstant="1.0" lighting-color="#ffffff" result="l"><feDistantLight azimuth="235" elevation="60"></feDistantLight></feDiffuseLighting><feComposite in="SourceGraphic" in2="l" operator="arithmetic" k1="1.06" k2="0" k3="0" k4="0" result="lc"></feComposite><feSpecularLighting in="h" surfaceScale="3.2" specularConstant="0.45" specularExponent="10" lighting-color="#ffe4c0" result="s"><feDistantLight azimuth="235" elevation="48"></feDistantLight></feSpecularLighting><feComposite in="lc" in2="s" operator="arithmetic" k1="0" k2="1" k3="0.14" k4="0" result="all"></feComposite><feComposite in="all" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fpore" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="29" result="p"></feTurbulence><feColorMatrix in="p" type="matrix" values="0 0 0 0 0.09  0 0 0 0 0.05  0 0 0 0 0.02  12 0 0 0 -8.1" result="pd0"></feColorMatrix><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="51" result="dn"></feTurbulence><feColorMatrix in="dn" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.9" result="dm"></feColorMatrix><feComposite in="pd0" in2="dm" operator="in" result="pd"></feComposite><feOffset in="pd" dx="0.6" dy="0.6" result="po"></feOffset><feColorMatrix in="po" type="matrix" values="0 0 0 0 1  0 0 0 0 0.86  0 0 0 0 0.66  0 0 0 0.14 0" result="ph"></feColorMatrix><feMerge result="pp"><feMergeNode in="ph"></feMergeNode><feMergeNode in="pd"></feMergeNode></feMerge><feComposite in="pp" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fpore2" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="29" result="p"></feTurbulence><feColorMatrix in="p" type="matrix" values="0 0 0 0 0.09  0 0 0 0 0.05  0 0 0 0 0.02  12 0 0 0 -7.75" result="pd0"></feColorMatrix><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="51" result="dn"></feTurbulence><feColorMatrix in="dn" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.9" result="dm"></feColorMatrix><feComposite in="pd0" in2="dm" operator="in" result="pd"></feComposite><feOffset in="pd" dx="0.7" dy="0.7" result="po"></feOffset><feColorMatrix in="po" type="matrix" values="0 0 0 0 1  0 0 0 0 0.86  0 0 0 0 0.66  0 0 0 0.16 0" result="ph"></feColorMatrix><feMerge result="pp"><feMergeNode in="ph"></feMergeNode><feMergeNode in="pd"></feMergeNode></feMerge><feComposite in="pp" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fwr2" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="17" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" result="na"></feColorMatrix><feComposite in="SourceAlpha" in2="na" operator="arithmetic" k1="0" k2="1" k3="1.1" k4="-0.75" result="raw"></feComposite><feComponentTransfer in="raw" result="m0"><feFuncA type="linear" slope="2.2" intercept="-0.1"></feFuncA></feComponentTransfer><feGaussianBlur in="m0" stdDeviation="0.8" result="m"></feGaussianBlur><feTurbulence type="fractalNoise" baseFrequency="0.12" numOctaves="2" seed="3" result="g"></feTurbulence><feColorMatrix in="g" type="matrix" values="0.18 0 0 0 0.56  0.16 0 0 0 0.41  0.12 0 0 0 0.27  0 0 0 0 1" result="tan"></feColorMatrix><feComposite in="tan" in2="m" operator="in"></feComposite></filter>
+<filter id="fton" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="61" result="t"></feTurbulence><feColorMatrix in="t" type="matrix" values="0 0 0 0 0.20  0 0 0 0 0.08  0 0 0 0 0.03  2.2 0 0 0 -1.12" result="dk"></feColorMatrix><feTurbulence type="fractalNoise" baseFrequency="0.03 0.04" numOctaves="2" seed="67" result="t2"></feTurbulence><feColorMatrix in="t2" type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.42  0 0 0 0 0.26  1.6 0 0 0 -0.92" result="lt"></feColorMatrix><feMerge result="mm"><feMergeNode in="dk"></feMergeNode><feMergeNode in="lt"></feMergeNode></feMerge><feComposite in="mm" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fmsc" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.03 0.75" numOctaves="2" seed="71" result="s"></feTurbulence><feColorMatrix in="s" type="matrix" values="0 0 0 0 0.66  0 0 0 0 0.52  0 0 0 0 0.38  14 0 0 0 -10.1" result="sl"></feColorMatrix><feTurbulence type="fractalNoise" baseFrequency="0.008 0.01" numOctaves="2" seed="73" result="cm"></feTurbulence><feColorMatrix in="cm" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -1.2" result="cmm"></feColorMatrix><feComposite in="sl" in2="cmm" operator="in" result="slm"></feComposite><feComposite in="slm" in2="SourceAlpha" operator="in"></feComposite></filter>
+<filter id="fshn" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="13" result="u"></feTurbulence><feSpecularLighting in="u" surfaceScale="3.2" specularConstant="1" specularExponent="18" lighting-color="#ffffff" result="s"><feDistantLight azimuth="235" elevation="48"></feDistantLight></feSpecularLighting><feColorMatrix in="s" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 0 0 0 -0.1" result="sm"></feColorMatrix><feComposite in="SourceGraphic" in2="sm" operator="in"></feComposite></filter>
+<filter id="fwob" x="-6%" y="-6%" width="112%" height="112%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="81" result="t"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="t" scale="26" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="fwearc" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.09 0.07" numOctaves="3" seed="12" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -6 0 0 0 4.3" result="m"></feColorMatrix><feComposite in="SourceGraphic" in2="m" operator="in"></feComposite></filter>
+<filter id="fwearc2" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.09 0.07" numOctaves="3" seed="12" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -6 0 0 0 3.85" result="m"></feColorMatrix><feComposite in="SourceGraphic" in2="m" operator="in"></feComposite></filter>
+<filter id="fbrd" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.55 0.9" numOctaves="2" seed="95" result="n"></feTurbulence><feColorMatrix in="n" type="matrix" values="0.6 0 0 0 0.55  0.6 0 0 0 0.52  0.6 0 0 0 0.48  0 0 0 0 1" result="c"></feColorMatrix><feComposite in="c" in2="SourceAlpha" operator="in" result="f"></feComposite><feBlend in="SourceGraphic" in2="f" mode="multiply"></feBlend></filter>
+<filter id="fstn" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="97" result="t"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="t" scale="34" xChannelSelector="R" yChannelSelector="G" result="d"></feDisplacementMap><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="98" result="t2"></feTurbulence><feDisplacementMap in="d" in2="t2" scale="5" xChannelSelector="R" yChannelSelector="G" result="d2"></feDisplacementMap><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="99" result="vn"></feTurbulence><feColorMatrix in="vn" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  2.4 0 0 0 -0.55" result="vm"></feColorMatrix><feComposite in="d2" in2="vm" operator="in" result="d3"></feComposite><feGaussianBlur in="d3" stdDeviation="0.9"></feGaussianBlur></filter>
+<filter id="fdent" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1"></feGaussianBlur></filter>
+<g id="scratches2" fill="none" stroke-linecap="round"><path d="M180 610L236 598"></path><path d="M188 618L232 609"></path><path d="M196 625L224 619"></path><path d="M402 520L411 517"></path><path d="M120 236L126 241"></path><path d="M520 690L513 694"></path><path d="M300 120L305 114"></path><path d="M452 402C458 396 466 394 474 396"></path><path d="M300 352L340 344"></path><path d="M560 430L586 452"></path><path d="M84 380L92 372"></path><path d="M236 744L262 739"></path></g>
+<g id="jcracks" fill="none" stroke-linecap="round"><path d="M620 22L629 24"></path><path d="M618 33L627 32"></path><path d="M621 41L632 43"></path><path d="M619 57L626 56"></path><path d="M622 79L631 81"></path><path d="M620 118L627 117"></path><path d="M619 690L628 689"></path><path d="M621 718L632 720"></path><path d="M618 741L625 740"></path><path d="M620 757L631 755"></path><path d="M622 772L629 773"></path></g>
+<g id="hinge" fill="none" stroke-linecap="round"><path d="M626 6C627 120 625 260 626 400S625 640 626 782"></path></g>
+<g id="wrinkles" fill="none" stroke-linecap="round"><path d="M618 14C610 30 606 44 605 60"></path><path d="M612 20C606 30 603 40 602 50"></path><path d="M618 774C611 760 607 746 606 732"></path><path d="M611 768C606 760 604 752 603 744"></path><path d="M6 732C16 740 24 750 28 762"></path><path d="M18 8C26 18 30 28 31 40"></path></g>
+<symbol id="swash" viewBox="0 0 240 18"><path d="M3 11.5C30 6.5 62 8.5 96 9.5S168 6.8 206 7.2C220 7.4 232 8.6 237 10.5C226 10.2 214 10.6 203 11C168 12.2 132 12.4 96 12.8S30 13.6 5 14Z"></path></symbol>
+<symbol id="man" viewBox="0 0 200 520"><path d="M100 98c-14 0-24-12-24-28 0-6 1-11 4-15H58c4-6 14-9 22-10l2-26c1-8 7-12 18-12s17 4 18 12l2 26c8 1 18 4 22 10h-22c3 4 4 9 4 15 0 16-10 28-24 28z"></path><path d="M87 100h26l16 14c22 4 36 10 42 22l12 120c2 18-2 40-6 52l-8 2-4-40 4 150h-34l-6 70 4 8h-22l-2-78h-18l-2 78H67l4-8-6-70H31l4-150-4 40-8-2c-4-12-8-34-6-52l12-120c6-12 20-18 42-22z"></path></symbol>
+<linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5418"></stop><stop offset="0.28" stop-color="#c9a043"></stop><stop offset="0.48" stop-color="#f6e3a0"></stop><stop offset="0.64" stop-color="#d4ad55"></stop><stop offset="0.86" stop-color="#8d6421"></stop><stop offset="1" stop-color="#c79c46"></stop></linearGradient>
+<linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6b4f1a"></stop><stop offset="0.3" stop-color="#c49a48"></stop><stop offset="0.45" stop-color="#f2dc98"></stop><stop offset="0.6" stop-color="#b48a3e"></stop><stop offset="0.85" stop-color="#7a5a20"></stop><stop offset="1" stop-color="#a88440"></stop></linearGradient>
+<radialGradient id="rivet" cx="0.35" cy="0.3" r="0.7"><stop offset="0" stop-color="#fbe9b0"></stop><stop offset="0.5" stop-color="#b88f3e"></stop><stop offset="1" stop-color="#4f3a10"></stop></radialGradient>
+<g id="flr"><path d="M0 0C10 2 20 8 26 20C16 16 8 14 0 0Z"></path><path d="M0 0C2 10 8 20 20 26C16 16 14 8 0 0Z"></path><path d="M3 3C13 13 22 23 30 31" fill="none"></path><circle cx="34" cy="34" r="2.4"></circle></g>
+<g id="tooling"><rect x="30" y="30" width="598" height="728" rx="2" fill="none"></rect><rect x="68" y="68" width="522" height="652" fill="none"></rect><g transform="translate(68 68) scale(1.7)"><use href="#flr"></use></g><g transform="translate(590 68) scale(-1.7 1.7)"><use href="#flr"></use></g><g transform="translate(68 720) scale(1.7 -1.7)"><use href="#flr"></use></g><g transform="translate(590 720) scale(-1.7 -1.7)"><use href="#flr"></use></g><path d="M329 540L364 592L329 644L294 592Z" fill="none"></path><path d="M329 556L353 592L329 628L305 592Z"></path><circle cx="329" cy="526" r="2.4"></circle><circle cx="329" cy="658" r="2.4"></circle></g>
+<g id="scratches" fill="none" stroke-linecap="round"><path d="M86 612C122 598 162 590 206 586"></path><path d="M58 302L116 270"></path><path d="M248 694C262 680 280 671 302 667"></path><path d="M398 118L438 109"></path><path d="M142 462C152 454 168 450 180 451"></path><path d="M120 380L131 352"></path><path d="M300 742C330 736 360 735 392 738"></path><path d="M44 150C60 160 70 172 76 188"></path></g>
+<g id="brasscorner"><path d="M0 0H62Q16 16 0 62Z" fill="url(#brass)"></path><path d="M0 0H62Q16 16 0 62Z" fill="#000000" filter="url(#fpat)"></path><path d="M5 5H46Q16 16 5 46Z" fill="none" stroke="#3c2808" stroke-opacity="0.55" stroke-width="0.8"></path><path d="M0 0H62Q16 16 0 62Z" fill="none" stroke="#28190a" stroke-opacity="0.7" stroke-width="0.8"></path><circle cx="9" cy="9" r="2.6" fill="url(#rivet)"></circle><circle cx="34" cy="7" r="2" fill="url(#rivet)"></circle><circle cx="7" cy="34" r="2" fill="url(#rivet)"></circle></g>
+<radialGradient id="sw-shadow" cx="0.5" cy="0.5" r="0.5"><stop offset="0.55" stop-color="#000000" stop-opacity="0.45"></stop><stop offset="1" stop-color="#000000" stop-opacity="0"></stop></radialGradient>
+<radialGradient id="sw-wax" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#e0574a"></stop><stop offset="0.6" stop-color="#9e1f17"></stop><stop offset="1" stop-color="#5e0d08"></stop></radialGradient>
+<g id="wax">
+<ellipse cx="267.5" cy="47.5" rx="30" ry="29" fill="url(#sw-shadow)"></ellipse>
+<path d="M263.58 17.43 Q266 16.78 268.48 17.11 Q270.97 17.44 273.38 18.08 Q275.79 18.73 277.89 20.07 Q279.99 21.4 281.22 23.68 Q282.44 25.96 284.25 27.4 Q286.07 28.85 288.18 30.37 Q290.3 31.9 290.69 34.38 Q291.08 36.87 291.64 39.22 Q292.19 41.57 292.04 43.99 Q291.88 46.4 292.09 48.94 Q292.31 51.49 290.74 53.51 Q289.17 55.54 288.76 58.21 Q288.35 60.88 287.17 63.4 Q285.99 65.93 283.49 67.06 Q280.98 68.2 278.54 69.14 Q276.11 70.09 273.7 71.21 Q271.29 72.33 268.65 71.25 Q266 70.18 263.6 69.92 Q261.2 69.66 258.8 69.21 Q256.41 68.76 254.42 67.34 Q252.43 65.92 250.18 64.87 Q247.94 63.81 246.07 62.14 Q244.19 60.47 243.6 57.96 Q243 55.45 241.33 53.47 Q239.65 51.5 239.78 48.96 Q239.9 46.42 240.02 44.01 Q240.14 41.6 239.88 39.05 Q239.62 36.49 240.66 34.2 Q241.7 31.9 242.72 29.55 Q243.74 27.19 245.96 25.82 Q248.17 24.45 249.98 22.74 Q251.78 21.03 254.18 20.36 Q256.58 19.68 258.87 18.88 Q261.16 18.09 263.58 17.43Z" fill="url(#sw-wax)"></path>
+<path d="M285.79 27.01 Q285.96 27.95 285.59 28.85 Q285.22 29.76 284.1 29.61 Q282.99 29.47 282.45 28.51 Q281.92 27.56 282.25 26.73 Q282.59 25.9 284.1 25.99 Q285.61 26.08 285.79 27.01Z" fill="#c43a2e" fill-opacity="0.8"></path>
+<path d="M244.73 40.25 A21.6 21.6 0 0 1 273.39 23.7" stroke="#ff8a7a" stroke-opacity="0.4" stroke-width="1.3" fill="none"></path>
+<path d="M286.3 51.39 A21.6 21.6 0 0 1 258.61 64.3" stroke="#3d0704" stroke-opacity="0.4" stroke-width="1.3" fill="none"></path>
+<circle cx="266" cy="44" r="19" fill="none" stroke="#5e0d08" stroke-width="1.4"></circle>
+<circle cx="266" cy="44" r="17" fill="none" stroke="#e0574a" stroke-width="0.6" opacity="0.6"></circle>
+<circle cx="266" cy="44" r="15.4" fill="none" stroke="#5e0d08" stroke-width="1" stroke-dasharray="0.01 2.3" stroke-linecap="round" stroke-opacity="0.8"></circle>
+</g>
+<g id="wax-top">
+<path d="M281 24.4 L278.4 30 L279.6 33.8" stroke="#3d0704" stroke-opacity="0.6" stroke-width="0.55" fill="none"></path>
+<path d="M241 50 L246 49 L248.4 51.4" stroke="#3d0704" stroke-opacity="0.55" stroke-width="0.5" fill="none"></path>
+<ellipse cx="257" cy="31" rx="7" ry="3" transform="rotate(-35 257 31)" fill="#ffffff" fill-opacity="0.2"></ellipse>
+<circle cx="253.5" cy="29" r="1" fill="#ffffff" fill-opacity="0.55"></circle>
+</g>
+</defs>
+</svg>
+
+<div class="scene vellum-scene" aria-hidden="true"><div class="scene-art"></div><div class="scene-shade"></div></div>
+<header class="vellum-heading">
+<p class="brand">VELLUM ROLEPLAY <span></span></p>
+<h1>Wybór postaci</h1><svg class="title-rule" viewBox="0 0 540 14" aria-hidden="true"><path d="M0 7Q130 0 265 5L257 8Q120 6 0 10ZM285 7L540 8L294 9Z" fill="#8f271d"/></svg>
+<p class="heading-hint">{{hint}}</p>
+</header>
+<button class="exit-control" type="button" onClick="{{exitRequest}}" aria-label="Przytrzymaj przez półtorej sekundy, aby wyjść z gry"><span class="exit-progress"></span><span class="exit-label">⟵ &nbsp; PRZYTRZYMAJ, ABY WYJŚĆ Z GRY</span></button>
+<div class="vellum-signature"><p class="brand">VELLUM ROLEPLAY <span></span></p><p>Każda historia zaczyna się od imienia.</p><i></i></div>
+<div class="action-feedback" role="status" aria-live="polite">{{feedback}}</div>
+<!-- Księga meldunkowa: lewa strona z obecną postacią, grzbiet przy prawej krawędzi ekranu -->
+<div class="{{lgCls}}">
+<div class="lg-in">
+<i class="lg-sh"></i>
+<i class="sd sdc sdb"></i><i class="sd sdc sdl"></i><i class="sd sdo sdb"></i><i class="sd sdo sdl"></i>
+<div class="lg-back skin">
+<i class="lth"></i><i class="clothw"><i class="cloth"></i></i><i class="mot"></i><i class="wr"></i><i class="g1"></i><i class="g2"></i><i class="lit"></i><i class="bev"></i>
+<i class="brs btl"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#brasscorner"></use></svg></i>
+<i class="brs bbl"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 64)"><use href="#brasscorner"></use></g></svg></i>
+</div>
+<div class="lg-edge"></div>
+<i class="sd sdpb"></i><i class="sd sdpl"></i>
+
+<div class="sh nb lg-pg">
+<div class="pp"></div><div class="zf"><i></i><i></i><i></i><i></i></div><div class="lg-gut"></div>
+<div class="in">
+<div class="row" style="justify-content: space-between"><p class="eb">{{base.no}}</p><button class="bt" type="button" onClick="{{overview}}">Widok ogólny</button></div>
+<h2 class="pname" style="margin-top: 12px">{{base.name}}</h2>
+<p class="pnick">{{base.nick}}</p>
+<svg class="sw sw-c" viewBox="0 0 240 18" aria-hidden="true" style="margin-top: 6px"><use href="#swash"></use></svg>
+<div style="display: grid; gap: 7px; font-size: 15.5px">
+<div class="ld"><span class="k">Zawód</span><i class="d"></i><span class="v">{{base.job}}</span></div>
+<div class="ld"><span class="k">Płeć</span><i class="d"></i><span class="v">{{base.sex}}</span></div>
+<div class="ld"><span class="k">Wiek</span><i class="d"></i><span class="v">{{base.age}}</span></div>
+<div class="ld"><span class="k">Gotówka</span><i class="d"></i><span class="v mono">{{base.money}}</span></div>
+</div>
+<h3 class="rb" style="margin-top: 24px">Opis postaci</h3>
+<p class="{{base.dcls}}"><span class="dc">{{base.init}}</span>{{base.rest}}</p>
+<div class="row" style="margin-top: auto; gap: 14px"><button class="pri" type="button" style="flex: 1" onClick="{{playRequest}}">Wejdź do gry <span aria-hidden="true">⟶</span></button><button class="bt delete-control" type="button" onClick="{{deleteRequest}}">Usuń postać</button></div>
+</div>
+</div>
+
+<sc-if value="{{shd}}" hint-placeholder-val="{{ false }}"><i class="{{shdCls}}"></i></sc-if>
+
+<sc-for list="{{leaves}}" as="L" hint-placeholder-count="1">
+<div class="{{L.cls}}">
+<div class="lg-face">
+<div class="sh nb lg-pg">
+<div class="pp"></div><div class="zf"><i></i><i></i><i></i><i></i></div><div class="lg-gut"></div>
+<div class="in">
+<div class="row" style="justify-content: space-between"><p class="eb">{{L.p.no}}</p><span class="bt">Widok ogólny</span></div>
+<h2 class="pname" style="margin-top: 12px">{{L.p.name}}</h2>
+<p class="pnick">{{L.p.nick}}</p>
+<svg class="sw sw-c" viewBox="0 0 240 18" aria-hidden="true" style="margin-top: 6px"><use href="#swash"></use></svg>
+<div style="display: grid; gap: 7px; font-size: 15.5px">
+<div class="ld"><span class="k">Zawód</span><i class="d"></i><span class="v">{{L.p.job}}</span></div>
+<div class="ld"><span class="k">Płeć</span><i class="d"></i><span class="v">{{L.p.sex}}</span></div>
+<div class="ld"><span class="k">Wiek</span><i class="d"></i><span class="v">{{L.p.age}}</span></div>
+<div class="ld"><span class="k">Gotówka</span><i class="d"></i><span class="v mono">{{L.p.money}}</span></div>
+</div>
+<h3 class="rb" style="margin-top: 24px">Opis postaci</h3>
+<p class="{{L.p.dcls}}"><span class="dc">{{L.p.init}}</span>{{L.p.rest}}</p>
+<div class="row" style="margin-top: auto; gap: 14px"><span class="pri" style="flex: 1">Wejdź do gry</span><span class="bt" style="height: 52px; padding: 0 16px">Usuń postać</span></div>
+</div>
+</div>
+<i class="lg-dim"></i>
+</div>
+<div class="lg-face lg-face-b">
+<div class="sh nb lg-pg lg-pg-b"><div class="pp"></div><div class="lg-gut"></div></div>
+<i class="lg-dim"></i>
+</div>
+</div>
+</sc-for>
+
+<div class="lg-hb t"></div><div class="lg-hb b"></div>
+
+<div class="lg-cover">
+<div class="lg-cv f skin">
+<i class="lth"></i><i class="ton"></i><i class="pores"></i><i class="clothw"><i class="cloth"></i></i><i class="mot"></i><i class="msc"></i><i class="grm"></i>
+<i class="tool"><svg viewBox="0 0 658 788" aria-hidden="true"><use href="#tooling" fill="#ffd2a0" fill-opacity="0.12" stroke="#ffd2a0" stroke-opacity="0.16" stroke-width="1" transform="translate(0.9 1.1)"></use><use href="#tooling" fill="#0e0602" fill-opacity="0.42" stroke="#0e0602" stroke-opacity="0.62" stroke-width="1.5"></use></svg></i>
+<i class="wr"></i><i class="jnt"></i>
+<i class="scr"><svg viewBox="0 0 658 788" aria-hidden="true"><use href="#scratches" stroke="#160a03" stroke-opacity="0.45" stroke-width="1.2" transform="translate(-0.5 -0.6)"></use><use href="#scratches" stroke="#d6ac7c" stroke-opacity="0.36" stroke-width="0.9"></use><path d="M28 540C110 486 214 452 336 440" fill="none" stroke="#cda573" stroke-opacity="0.07" stroke-width="9" stroke-linecap="round"></path><path d="M60 700C120 676 170 668 230 666" fill="none" stroke="#cda573" stroke-opacity="0.06" stroke-width="7" stroke-linecap="round"></path></svg></i>
+<i class="crs"><svg viewBox="0 0 658 788" aria-hidden="true"><use href="#hinge" stroke="#120802" stroke-opacity="0.3" stroke-width="2.6"></use><use href="#hinge" stroke="#e2b98a" stroke-opacity="0.12" stroke-width="1.6" transform="translate(-2.4 -0.4)"></use><use href="#wrinkles" stroke="#120802" stroke-opacity="0.15" stroke-width="1.8"></use><use href="#wrinkles" stroke="#e2b98a" stroke-opacity="0.06" stroke-width="1.2" transform="translate(-1.4 -0.4)"></use></svg></i><i class="scf"></i>
+<i class="mrk"><svg viewBox="0 0 658 788" aria-hidden="true"><g filter="url(#fstn)"><path d="M418 566C430 548 462 538 494 541C526 544 552 560 556 584C560 606 546 628 522 640C498 652 462 654 438 642C414 630 404 610 406 592C407 581 411 574 418 566Z" fill="#1c0b03" fill-opacity="0.06" stroke="#241006" stroke-opacity="0.32" stroke-width="2.2"></path><path d="M548 572C562 588 564 610 552 628C544 640 530 650 514 655" fill="none" stroke="#241006" stroke-opacity="0.14" stroke-width="1.2"></path></g><circle cx="131" cy="675" r="6.5" fill="#1c2538" fill-opacity="0.1"></circle><g fill="#1c2538"><path d="M127.5 671.5C129.5 670 133 669.8 135 671C137 672.2 136.6 674 135.8 675.6C135 677.4 133.8 679.2 131.4 679.4C129 679.6 127 678.4 126.6 676.4C126.2 674.6 126.2 672.6 127.5 671.5Z" fill-opacity="0.66" stroke="#0e121c" stroke-opacity="0.45" stroke-width="0.8"></path><circle cx="139.5" cy="679" r="0.9" fill-opacity="0.6"></circle><circle cx="142" cy="674.5" r="0.6" fill-opacity="0.5"></circle><circle cx="137" cy="684" r="0.7" fill-opacity="0.55"></circle><ellipse cx="144.5" cy="681.5" rx="1.3" ry="0.6" transform="rotate(30 144.5 681.5)" fill-opacity="0.45"></ellipse></g><ellipse cx="129.6" cy="673" rx="1.4" ry="0.7" fill="#ffffff" fill-opacity="0.12" transform="rotate(-25 129.6 673)"></ellipse><g fill="none" stroke-linecap="round" filter="url(#fdent)"><path d="M340 476C344 466 356 462 366 466" stroke="#120802" stroke-opacity="0.34" stroke-width="2.2"></path><path d="M342 480C348 472 358 470 368 472" stroke="#e8c49a" stroke-opacity="0.16" stroke-width="2"></path><path d="M541 266A7 7 0 0 1 552 255" stroke="#120802" stroke-opacity="0.32" stroke-width="2.4"></path><path d="M555 258A7 7 0 0 1 544 269" stroke="#e8c49a" stroke-opacity="0.15" stroke-width="2.2"></path></g><use href="#scratches2" stroke="#160a03" stroke-opacity="0.32" stroke-width="0.9" transform="translate(-0.4 -0.5)"></use><use href="#scratches2" stroke="#dcb486" stroke-opacity="0.38" stroke-width="0.6"></use><use href="#jcracks" stroke="#120802" stroke-opacity="0.34" stroke-width="0.8"></use><use href="#jcracks" stroke="#e2b98a" stroke-opacity="0.14" stroke-width="0.7" transform="translate(0 0.9)"></use></svg></i>
+<i class="gv1"></i><i class="gv2"></i><i class="g1"></i><i class="g2"></i><i class="crn"><svg viewBox="0 0 658 788" aria-hidden="true"><path d="M0 0H21C18 3 17 6 13 8C11 12 8 14 5 17C3 18 1 20 0 22Z" fill="#7a6a52" filter="url(#fbrd)"></path><path d="M0 788H23C19 785 17 782 14 780C11 776 8 774 5 771C3 769 1 767 0 765Z" fill="#7a6a52" filter="url(#fbrd)"></path><g fill="none" stroke-linecap="round"><path d="M21 0C18 3 17 6 13 8C11 12 8 14 5 17C3 18 1 20 0 22" stroke="#d8b184" stroke-opacity="0.34" stroke-width="1"></path><path d="M22.4 1.2C19.4 4.2 18.4 7.2 14.4 9.4C12.4 13.4 9.4 15.6 6.1 18.6C3.9 19.8 1.9 21.6 0.9 23.6" stroke="#140902" stroke-opacity="0.5" stroke-width="1"></path><path d="M23 788C19 785 17 782 14 780C11 776 8 774 5 771C3 769 1 767 0 765" stroke="#140902" stroke-opacity="0.6" stroke-width="1.1"></path><path d="M24.4 786.8C20.4 783.8 18.4 780.8 15.4 778.6C12.4 774.6 9.4 772.4 6.1 769.4C3.9 768.2 1.9 766.4 0.9 764.4" stroke="#d8b184" stroke-opacity="0.26" stroke-width="0.8"></path></g></svg></i>
+<i class="fil"><svg viewBox="0 0 658 788" aria-hidden="true"><g fill="none" stroke="url(#gg)" stroke-width="1.5" filter="url(#fwear2)"><path d="M110 0L0 110"></path><path d="M0 678L110 788"></path><path d="M478 0V788"></path></g></svg></i>
+<i class="lit"></i><i class="shn"></i><i class="pol"></i><i class="bev"></i>
+<i class="brs btl"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#brasscorner"></use></svg></i>
+<i class="brs bbl"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 64)"><use href="#brasscorner"></use></g></svg></i>
+<div class="lb nP nR"><i class="tz tz1"></i><i class="tz tz2"></i><b>Księga</b><b>meldunkowa</b></div>
+</div>
+<div class="lg-cv b"><i class="lth"></i><i class="ep"></i></div>
+<i class="sd sdv sdb"></i><i class="sd sdv sdl"></i>
+</div>
+</div>
+</div>
+
+<!-- Strony księgi wzdłuż dołu ekranu: postacie i wolne miejsca -->
+<nav class="cards" aria-label="Strony księgi meldunkowej">
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="5">
+<button class="{{c.cls}}" type="button" aria-pressed="{{c.on}}" onClick="{{c.pick}}">
+<span class="bk"></span><span class="pp"></span><span class="zf"><i></i><i></i><i></i><i></i></span><span class="tp"><i></i><i></i></span>
+<span class="in"><span class="no">{{c.no}}</span>
+<sc-if value="{{c.full}}" hint-placeholder-val="{{ true }}"><img class="card-portrait" data-portrait="{{c.portrait}}" alt="{{c.portraitAlt}}" draggable="false"><span class="nm">{{c.name}}</span><span class="nk">{{c.nick}}</span><span class="ln">{{c.line}}</span></sc-if>
+<sc-if value="{{c.free}}" hint-placeholder-val="{{ false }}"><span class="free-mark" aria-hidden="true">✦</span><span class="fr">Wolne miejsce</span><span class="nw">Zapisz nową postać</span></sc-if>
+</span>
+<sc-if value="{{c.seal}}" hint-placeholder-val="{{ false }}"><span class="sa"><svg class="seal" viewBox="234 12 66 66" aria-hidden="true"><use href="#wax"></use><g font-family="Cinzel, serif" font-weight="700" text-anchor="middle"><text x="266.9" y="49.9" font-size="14" letter-spacing="0.6" fill="#2a0503" opacity="0.8">{{c.mono}}</text><text x="266.2" y="49.2" font-size="14" letter-spacing="0.6" fill="#f6dfa0">{{c.mono}}</text></g><use href="#wax-top"></use></svg></span></sc-if>
+</button>
+</sc-for>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;powierzchnia&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dziś (A z E4 · 5b)&quot;,&quot;1 · cielęca matowa&quot;,&quot;2 · cielęca półmatowa z połyskiem&quot;,&quot;3 · cielęca wygładzona dłońmi&quot;],&quot;default&quot;:&quot;1 · cielęca matowa&quot;,&quot;section&quot;:&quot;Okładka&quot;},&quot;pory&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;drobne&quot;,&quot;wyraźniejsze&quot;],&quot;default&quot;:&quot;drobne&quot;,&quot;section&quot;:&quot;Okładka&quot;},&quot;zuzycie&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;lekkie&quot;,&quot;średnie&quot;],&quot;default&quot;:&quot;lekkie&quot;,&quot;section&quot;:&quot;Okładka&quot;},&quot;tempo&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;zwykłe&quot;,&quot;wolne (×3)&quot;],&quot;default&quot;:&quot;zwykłe&quot;,&quot;section&quot;:&quot;Ruch&quot;},&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1080}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 2, shown: 2, last: 2, phase: 'idle', from: 2, to: 2, feedback: '' };
+    this.timer = null;
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  chars() {
+    return [
+      { first: 'Mary', last: 'Ellis', nick: 'Ruda', job: 'Szwaczka', female: true, age: '27 lat', money: '$ 38,20', desc: 'Drobna, piegowata, rude włosy spina w ciasny kok. Szyje dla połowy Valentine i wie o połowie miasta więcej, niż by chciała.' },
+      { first: 'Jesse', last: 'Calloway', nick: 'Cichy', job: 'Zastępca szeryfa', grade: 1, female: false, age: '34 lata', money: '$ 142,50', desc: 'Wysoki, szczupły, z siwiejącą brodą i blizną nad lewą brwią. Mówi mało, patrzy długo. Nosi wytarty płaszcz, a odznakę przypina krzywo, jakby się jej wstydził.' },
+      { first: 'Tomás', last: 'Herrera', nick: '', job: 'Bez zawodu', female: false, age: '41 lat', money: '$ 3,75', desc: '' },
+      { first: 'Ruth', last: 'Whitaker', nick: 'Wdowa', job: 'Właścicielka pensjonatu', female: true, age: '52 lata', money: '$ 410,00', desc: 'Prowadzi pensjonat przy stacji i jego księgę gości. Nikt nie wie, co stało się z jej mężem, a ona nie pyta nikogo o przeszłość.' }
+    ];
+  }
+  requestAction(action, slot) {
+    if ((action === 'play' || action === 'delete-request') && !slot) return;
+    const character = slot ? this.chars()[slot - 1] || null : null;
+    window.dispatchEvent(new CustomEvent('vellum:action', { detail: { action, slot, character } }));
+    if (typeof window.GetParentResourceName !== 'function') {
+      this.setState({ feedback: 'Podgląd interfejsu · zdarzenie: ' + action + (slot ? ' · karta ' + slot : '') });
+    }
+  }
+  k() {
+    return (this.props.tempo || '').indexOf('wolne') === 0 ? 3 : 1;
+  }
+  later(state, ms) {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => { this.timer = null; this.setState(state); }, ms);
+  }
+  jump(state) {
+    clearTimeout(this.timer);
+    this.timer = null;
+    this.setState(Object.assign({ phase: 'idle' }, state));
+  }
+  pick(i) {
+    const st = this.state;
+    if (st.phase !== 'idle') {
+      // Szybkie klikanie: od razu ostatnia wybrana strona, bez kolejki animacji
+      this.jump({ sel: i, shown: i, last: i });
+      return;
+    }
+    if (i === st.sel) return;
+    if (st.shown === null) {
+      this.setState({ sel: i, shown: i, last: i, phase: 'opening' });
+      this.later({ phase: 'idle' }, 1050 * this.k() + 40);
+      return;
+    }
+    const from = st.shown;
+    this.setState({ sel: i, shown: i, last: i, phase: i > from ? 'fwd' : 'bwd', from: from, to: i });
+    this.later({ phase: 'idle' }, 700 * this.k() + 40);
+  }
+  overview() {
+    const st = this.state;
+    if (st.shown === null) return;
+    if (st.phase !== 'idle') {
+      this.jump({ sel: null, shown: null });
+      return;
+    }
+    this.setState({ sel: null, phase: 'closing' });
+    this.later({ shown: null, phase: 'idle' }, 1000 * this.k() + 40);
+  }
+  page(i) {
+    const c = this.chars()[i - 1];
+    return {
+      no: 'REJESTR OSOBOWY  /  STRONA ' + i,
+      name: c.first + ' ' + c.last,
+      nick: c.nick ? '„' + c.nick + '”' : 'Brak przydomka',
+      job: c.grade ? c.job + ', stopień ' + c.grade : c.job,
+      sex: c.female ? 'Kobieta' : 'Mężczyzna',
+      age: c.age,
+      money: c.money,
+      dcls: c.desc ? 'desc' : 'desc empty',
+      init: c.desc ? c.desc.charAt(0) : '',
+      rest: c.desc ? c.desc.slice(1) : 'Ta postać nie ma jeszcze opisu.'
+    };
+  }
+  // Wybory z E4 · 5b na stałe (A, bez okuć, cienka); zmienia się tylko powierzchnia wierzchu okładki
+  look() {
+    const p = this.props;
+    const s = (p.powierzchnia || '2').charAt(0);
+    const n = s === '1' ? 1 : s === '2' ? 2 : s === '3' ? 3 : 0;
+    return [
+      'rva bkz gr1 ok0',
+      n ? 'pwc pw' + n : 'pw0',
+      (p.pory || '').indexOf('wyra') === 0 ? 'po2' : 'po1',
+      (p.zuzycie || '').indexOf('śr') === 0 ? 'zu2' : 'zu1'
+    ].join(' ');
+  }
+  renderVals() {
+    const st = this.state;
+    const list = this.chars();
+    const turning = st.phase === 'fwd' || st.phase === 'bwd';
+    const fwd = st.phase === 'fwd';
+    const open = st.shown !== null && st.phase !== 'closing';
+
+    let baseIndex = st.shown !== null ? st.shown : st.last;
+    if (turning) baseIndex = fwd ? st.from : st.to;
+
+    const leaves = [];
+    if (turning) {
+      leaves.push({ cls: 'lg-leaf lg-leafz ' + (fwd ? 'lf-in' : 'lf-out'), p: this.page(fwd ? st.to : st.from) });
+    }
+
+    const cards = [];
+    for (let i = 1; i <= 5; i++) {
+      const c = list[i - 1];
+      const on = st.sel === i;
+      cards.push({
+        cls: 'sh card sm nb' + (on ? ' up' : '') + (c ? '' : ' free'),
+        on: on ? 'true' : 'false',
+        no: String(i).padStart(2, '0') + '.',
+        portrait: c ? (c.female ? './assets/portrait-female.png' : './assets/portrait-male.png') : '',
+        portraitAlt: c ? (c.female ? 'Portret kobiety' : 'Portret mężczyzny') : '',
+        full: !!c,
+        free: !c,
+        name: c ? c.first + ' ' + c.last : '',
+        nick: c ? (c.nick ? '„' + c.nick + '”' : 'Brak przydomka') : '',
+        line: c ? c.job + ' · ' + c.age : '',
+        mono: c ? (c.first.charAt(0) + c.last.charAt(0)).toUpperCase() : '',
+        seal: on && !!c,
+        pick: c ? () => this.pick(i) : () => this.requestAction('create', i)
+      });
+    }
+
+    return {
+      cls: 't2 wyb pA oD zC kC t4k k' + this.k() + ' s80 ' + this.look(),
+      lgCls: 'lg' + (open ? ' open' : ''),
+      hint: st.sel ? 'Wybrana karta jest oznaczona pieczęcią.' : 'Wybierz stronę, aby obejrzeć postać.',
+      overviewScene: st.sel === null,
+      characterScene: st.sel !== null,
+      base: this.page(baseIndex),
+      overview: () => this.overview(),
+      playRequest: () => this.requestAction('play', this.state.sel),
+      deleteRequest: () => this.requestAction('delete-request', this.state.sel),
+      exitRequest: () => {},
+      feedback: st.feedback,
+      shd: turning,
+      shdCls: 'lg-shd ' + (fwd ? 'shd-in' : 'shd-out'),
+      leaves: leaves,
+      cards: cards
+    };
+  }
+}
+</script>
+</body>
+</html>

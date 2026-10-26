@@ -1,0 +1,87 @@
+/* Vellum — design canvas 1920 × 1080. Additive skin for the original component. */
+@font-face{font-family:Vellum Display;src:url('../assets/fonts/PlayfairDisplay.ttf') format('truetype');font-weight:400 900;font-display:swap}
+@font-face{font-family:Vellum Book;src:url('../assets/fonts/LibreBaskerville.ttf') format('truetype');font-weight:400 700;font-display:swap}
+@font-face{font-family:Vellum Book;src:url('../assets/fonts/LibreBaskerville-Italic.ttf') format('truetype');font-weight:400 700;font-style:italic;font-display:swap}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#100c09}
+.t4k{--display:'Vellum Display',Georgia,serif;--body:'Vellum Book',Georgia,serif;--type:'Courier New',monospace;--script:var(--display);position:absolute!important;left:50%;top:50%;transform-origin:50% 50%;isolation:isolate;background:#171009}
+.vellum-scene{background:#22180f}
+.scene-art{position:absolute;inset:0;background-image:url('../assets/frontier-scene.png');background-size:cover;background-position:center 46%;filter:saturate(.78) sepia(.12);transform:scale(1.015)}
+.scene-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,9,6,.46),transparent 36%,rgba(13,9,6,.05) 60%,rgba(13,9,6,.6)),linear-gradient(0deg,#0e0a07 0%,rgba(14,10,7,.9) 6%,transparent 34%,rgba(12,9,6,.3) 100%)}
+.scene-shade::after{content:'';position:absolute;inset:7px;border:1px solid #a0784130;box-shadow:inset 0 0 130px 35px #0b07066b;pointer-events:none}
+.vellum-heading{position:absolute;left:92px;top:57px;width:680px;color:#f2e5c7;text-shadow:0 2px 4px #09070480;z-index:2}
+.t4k .brand{display:flex;align-items:center;gap:22px;font-family:var(--type);font-weight:700;letter-spacing:9px;font-size:14px;white-space:nowrap;color:#d5c19e}
+.brand span{display:block;flex:1;max-width:155px;height:2px;background:linear-gradient(90deg,#d2bf9d,transparent);transform:rotate(-.4deg)}
+.t4k .vellum-heading h1{font-family:var(--display);font-weight:700;font-size:96px;letter-spacing:-4px;line-height:1.13;margin-top:13px;white-space:nowrap}
+.title-rule{display:block;width:620px;height:14px;margin-top:0}
+.t4k .heading-hint{font-size:17px;font-style:italic;color:#e0cfad;margin-top:14px}
+.t4k .exit-control{position:absolute;left:92px;top:305px;width:357px;height:52px;color:#342619;background:linear-gradient(130deg,#d7c19b,#eee0bd 48%,#ccb18a);border:2px solid #9d7c4f;box-shadow:0 3px 12px #0008,inset 0 0 0 4px #d9c5a1,inset 0 0 0 5px #9d7c4fa0;z-index:3;font-family:var(--type);font-size:13px;font-weight:700;letter-spacing:1.4px;text-align:center;overflow:hidden;border-radius:2px}
+.exit-label{position:relative;z-index:1}
+.exit-progress{position:absolute;inset:0;background:#8b2c2150;transform:scaleX(0);transform-origin:left}
+.holding .exit-progress{transform:scaleX(1);transition:transform 1.5s linear}
+.vellum-signature{position:absolute;left:96px;top:677px;z-index:1;color:#ddcba9}
+.t4k .vellum-signature .brand{font-size:11px;letter-spacing:6px;gap:16px}
+.vellum-signature .brand span{width:110px}
+.t4k .vellum-signature>p+p{margin-top:12px;font-size:15px;font-style:italic}
+.vellum-signature>i{display:block;margin-top:16px;width:335px;height:1px;background:linear-gradient(90deg,#b1976b9c,transparent)}
+.t4k .lg{left:1280px;top:50px;width:625px;height:720px}
+.t4k .lg-back,.t4k .lg-cover{inset:-29px -2px -36px -37px}
+.t4k .lg-back{box-shadow:-8px 8px 13px #080402a0,0 0 0 2px #1a0d07,inset 0 0 0 4px #7f5734;border:2px solid #986e40;border-radius:9px 3px 4px 8px}
+.t4k .lg-back>.lth{background:radial-gradient(ellipse at 30% 25%,#7d5432,#3f2517 65%,#2b190f);filter:url(#flthb)}
+.t4k .lg-back>.g1{border:2px solid #a47d45;box-shadow:0 0 0 4px #1c0e0760,inset 0 0 0 4px #1c0e0760}
+.t4k .lg-back>.g2{border:1px dashed #b28d55a0}
+.t4k .lg .pp{filter:url(#fpA);background:radial-gradient(ellipse at 82% 92%,#8f602b45,transparent 26%),radial-gradient(ellipse at 8% 7%,#ab71303b,transparent 35%),linear-gradient(105deg,#e5d0a8,#f0e1bf 48%,#dfc89f);box-shadow:inset 0 0 42px #8d5d3270,inset 0 0 0 1px #9d784e}
+.t4k .lg-pg>.in{padding:38px 49px 34px 45px}
+.t4k .lg-pg .zf:before{inset:14px 16px 14px 18px;border:1px solid #92724790;background:linear-gradient(90deg,transparent 9px,#9c4d3466 10px,#9c4d3466 11px,transparent 12px)}
+.t4k .lg-pg .eb{font-family:var(--type);font-size:11px;letter-spacing:1.6px;font-weight:700;color:#51412d}
+.t4k .lg-pg .pname{font-size:47px;letter-spacing:-1.6px;line-height:1.1;margin-top:22px!important}
+.t4k .lg-pg .pnick{font-size:19px;margin-top:10px}
+.t4k .lg-pg .sw{display:block;width:165px;height:17px;margin-top:8px!important;margin-bottom:17px}
+.t4k .lg-pg .ld{min-height:25px}
+.t4k .lg-pg .ld .k{font-family:var(--type);font-size:12px;letter-spacing:2px;font-weight:700;color:#3c3020}
+.t4k .lg-pg .ld .v{font-size:14px}
+.t4k .lg-pg .ld .d{border-bottom:1px dotted #76634870;opacity:.7}
+.t4k .lg-pg .rb{margin-top:36px!important;font-family:var(--type);font-size:12px;letter-spacing:3px;color:#362a20}
+.t4k .lg-pg .rb:after{content:'';display:block;width:148px;height:2px;margin-top:7px;background:linear-gradient(90deg,#8d291d 45%,transparent);transform:rotate(-.6deg)}
+.t4k .lg-pg .desc{font-size:14px;line-height:1.65;margin-top:7px;position:relative;z-index:1}
+.t4k .lg-pg .desc .dc{font-size:1.5em;color:#6d3526}
+.t4k .lg-pg>.in:after{content:'';position:absolute;right:47px;bottom:95px;width:330px;height:170px;background:url('../assets/frontier-etching.svg') center/contain no-repeat;opacity:.36;pointer-events:none;z-index:-1;mix-blend-mode:multiply}
+.t4k .lg-pg>.in>.row:last-child{gap:23px!important;position:relative;z-index:2}
+.t4k .lg .pri{height:53px;display:flex;align-items:center;justify-content:center;gap:24px;min-width:0;background:linear-gradient(170deg,#8b241b,#681810);color:#f1ddbb;border:1px solid #6e2018;outline:2px solid #90392a;outline-offset:3px;box-shadow:inset 0 0 0 3px #9d4e35,inset 0 0 0 4px #c29b6a80,0 3px 5px #5d321c3b;font-family:var(--body);font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-align:center;filter:url(#fstamp)}
+.t4k .lg .pri span{font-size:24px;font-weight:400;line-height:1}
+.t4k .lg .pri:hover{background:linear-gradient(170deg,#a33325,#7c2117)}
+.t4k .lg .bt{display:inline-flex;align-items:center;font-size:13px;font-style:italic;border-bottom:1px solid #584329;white-space:nowrap}
+.t4k .lg .delete-control{height:36px;padding:0!important;font-size:11px;text-transform:uppercase;font-style:normal;align-self:center}
+.t4k .lg-gut{width:40px;opacity:.65}
+.t4k .cards{left:40px;top:866px;gap:18px;align-items:flex-end}
+.t4k .cards .card{width:354px;height:146px;flex-shrink:0;filter:drop-shadow(0 7px 8px #0008)}
+.t4k .cards .card>.in{padding:14px 14px 13px 130px;position:relative;text-align:left}
+.t4k .cards .card>.pp{filter:url(#fpA);background:radial-gradient(ellipse at 100% 100%,#8f602b66,transparent 56%),linear-gradient(130deg,#eadab9,#e6d2aa);box-shadow:inset 0 0 18px #7d512b66;border:1px solid #ba9c70}
+.t4k .cards .card .zf::before{inset:7px;border:1px solid #6c5537a0;box-shadow:inset 0 0 0 2px #fff3cb66}
+.t4k .cards .card .zf::after{content:'';position:absolute;width:138px;height:116px;right:6px;bottom:7px;background:url('../assets/frontier-etching.svg') right bottom/auto 100% no-repeat;opacity:.29;mix-blend-mode:multiply}
+.card-portrait{position:absolute;left:14px;top:13px;width:101px;height:120px;object-fit:cover;object-position:50% 44%;border:1px solid #5b4930;outline:3px double #806b4c;outline-offset:3px;box-shadow:0 2px 4px #45271166;filter:sepia(.12) contrast(1.06)}
+.t4k .cards .card .no{font-family:var(--type);font-size:11px;letter-spacing:2px;font-weight:700}
+.t4k .cards .card .nm{font-size:22px;font-weight:700;letter-spacing:-.55px;max-width:210px;line-height:1.2;margin-top:6px;text-shadow:0 1px #fff7}
+.t4k .cards .card .nk{font-size:12px;line-height:1.4;margin-top:3px;min-height:20px}
+.t4k .cards .card .ln{font-size:10.5px;white-space:nowrap;letter-spacing:-.2px}
+.t4k .cards .card.up{transform:translateY(-20px)}
+.t4k .cards .card.up>.in{padding-right:14px}
+.t4k .cards .card.up>.zf::before{border:2px solid #9c3b2b;box-shadow:0 0 0 2px #c8815855,inset 0 0 0 2px #f6e1b988}
+.t4k .cards .card.up .card-portrait{outline-color:#9c3b2b}
+.t4k .cards .sa{width:59px;height:59px;right:13px;top:76px}
+.t4k .cards .sa text{display:none}
+.t4k .cards .card.up .ln{max-width:146px;overflow:hidden;text-overflow:ellipsis}
+.t4k .cards .card.free{cursor:pointer}
+.t4k .cards .card.free>.in{padding:23px 16px 18px;align-items:center;text-align:center}
+.t4k .cards .card.free .no{display:none}
+.free-mark{font-size:25px;color:#a76940;line-height:1}
+.t4k .cards .card.free .fr{font-size:22px;margin-top:8px}
+.t4k .cards .card.free .nw{font-family:var(--type);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:10px}
+.t4k .cards .card.free:hover{transform:translateY(-8px)}
+.t4k button:focus-visible{outline:2px solid #e8b761;outline-offset:5px}
+.t4k .action-feedback{position:absolute;bottom:19px;left:45px;color:#e5cd9e;font-family:var(--type);font-size:12px;z-index:8}
+@media(prefers-reduced-motion:reduce){.t4k *{animation-duration:.001ms!important;transition-duration:.001ms!important}.scene-art{transform:none}}
+/* Ragged corners and settled ink; keep wear quieter than the text. */
+.t4k .lg .pri{border-radius:0;filter:none;background:radial-gradient(ellipse at 15% 20%,#b457341c,transparent),linear-gradient(170deg,#8b241b,#681810)}
+.t4k .lg-pg>.in>.row:last-child .pri{flex:1}
+.t4k .lg-pg .zf:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 100px 16px at 38% 0,#76512647,transparent),radial-gradient(ellipse 12px 180px at 0 62%,#6b42283b,transparent),radial-gradient(ellipse 140px 8px at 58% 100%,#71452155,transparent);border:1px solid #79542e45;pointer-events:none}
+.t4k .lg-pg>.in:before{content:'';position:absolute;top:0;right:0;width:42px;height:43px;background:linear-gradient(43deg,transparent 48%,#81613d7a 49%,#e0caa3 53%,#b3976b 92%);filter:drop-shadow(-2px 2px 1px #4e2d1f44);pointer-events:none}
