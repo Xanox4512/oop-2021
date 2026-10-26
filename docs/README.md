@@ -20,7 +20,13 @@ Domyślnie otwarta jest karta Jessego, jak w koncepcie. Powrót do widoku ogóln
 
 ## Portrety
 
-Dołączono dwa nowe, wygenerowane portrety inspirowane przesłanymi fotografiami sepiowymi. Kobiety używają `assets/portrait-female.png`, mężczyźni `assets/portrait-male.png`. Przypisanie wynika z oryginalnego pola `female`. Wymiary zdjęć na kartach i kadrowanie określa `.card-portrait` w `t2/vellum.css`. Same obrazy nie są rozciągane do innych proporcji — `object-fit: cover` dopasowuje kadr.
+Dołączono 10 ciemnych portretów sylwetkowych: `assets/portraits/male-1.png` do `male-5.png` i `female-1.png` do `female-5.png`. Pole `female` wybiera zestaw, a numer slotu (1–5) wybiera obraz. Każdy slot ma własny wariant, więc zdjęcia nie powtarzają się nawet przy pięciu postaciach tej samej płci. Przypisanie jest stałe przy ponownym otwieraniu księgi; zmiana slotu zmienia przypisany portret.
+
+Portrety są dodatkowo przyciemnione w `.card-portrait` w `t2/vellum.css`; celowo pokazują przede wszystkim sylwetki. Kadrowanie używa `object-fit: cover`.
+
+Każda strona ma własną rycinę: 1 — ranczo, 2 — stacja kolejowa, 3 — górnicze miasteczko, 4 — leśna chata, 5 — przystań. Pliki to `assets/book-paper.png` oraz `book-paper-2.png` do `book-paper-5.png`. Rycinę wybiera numer strony, także podczas animacji przewracania. Piąta pojawi się, gdy zostanie obsadzony piąty slot; demonstracyjne wolne miejsce nadal wywołuje zdarzenie tworzenia postaci.
+
+Tytuł na okładce korzysta z lokalnej czcionki Playfair Display, bez filtrów tekstur nakładanych na litery.
 
 ## Przyciski i integracja
 

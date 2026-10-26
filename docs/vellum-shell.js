@@ -49,4 +49,13 @@
   addEventListener('resize', fit);
   new MutationObserver(fit).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-portrait'] });
   fit();
+  // Warm all five sheets before the first turn; assets remain local to the resource.
+  const warmPages = () => {
+    for (let page = 1; page <= 5; page++) {
+      const image = new Image();
+      image.src = './assets/book-paper' + (page === 1 ? '' : '-' + page) + '.png';
+    }
+  };
+  if (document.readyState === 'complete') warmPages();
+  else window.addEventListener('load', warmPages, { once: true });
 })();

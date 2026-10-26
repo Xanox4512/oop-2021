@@ -345,7 +345,7 @@ linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 5px,transparent 14px)}
 <div class="scene vellum-scene" aria-hidden="true"><div class="scene-art"></div><div class="scene-shade"></div></div>
 <header class="vellum-heading">
 <p class="brand">VELLUM ROLEPLAY <span></span></p>
-<h1>Wybór postaci</h1><svg class="title-rule" viewBox="0 0 540 14" aria-hidden="true"><path d="M0 7Q130 0 265 5L257 8Q120 6 0 10ZM285 7L540 8L294 9Z" fill="#8f271d"/></svg>
+<h1>Wybór <em>postaci</em></h1><svg class="title-rule" viewBox="0 0 540 14" aria-hidden="true"><path d="M0 7Q130 0 265 5L257 8Q120 6 0 10ZM285 7L540 8L294 9Z" fill="#8f271d"/></svg>
 <p class="heading-hint">{{hint}}</p>
 </header>
 <button class="exit-control" type="button" onClick="{{exitRequest}}" aria-label="Przytrzymaj przez półtorej sekundy, aby wyjść z gry"><span class="exit-progress"></span><span class="exit-label">⟵ &nbsp; PRZYTRZYMAJ, ABY WYJŚĆ Z GRY</span></button>
@@ -365,7 +365,7 @@ linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 5px,transparent 14px)}
 <i class="sd sdpb"></i><i class="sd sdpl"></i>
 
 <div class="sh nb lg-pg">
-<div class="pp"></div><div class="zf"><i></i><i></i><i></i><i></i></div><div class="lg-gut"></div>
+<div class="{{base.paperClass}}"></div><div class="zf"><i></i><i></i><i></i><i></i></div><div class="lg-gut"></div>
 <div class="in">
 <div class="row" style="justify-content: space-between"><p class="eb">{{base.no}}</p><button class="bt" type="button" onClick="{{overview}}">Widok ogólny</button></div>
 <h2 class="pname" style="margin-top: 12px">{{base.name}}</h2>
@@ -389,7 +389,7 @@ linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 5px,transparent 14px)}
 <div class="{{L.cls}}">
 <div class="lg-face">
 <div class="sh nb lg-pg">
-<div class="pp"></div><div class="zf"><i></i><i></i><i></i><i></i></div><div class="lg-gut"></div>
+<div class="{{L.p.paperClass}}"></div><div class="zf"><i></i><i></i><i></i><i></i></div><div class="lg-gut"></div>
 <div class="in">
 <div class="row" style="justify-content: space-between"><p class="eb">{{L.p.no}}</p><span class="bt">Widok ogólny</span></div>
 <h2 class="pname" style="margin-top: 12px">{{L.p.name}}</h2>
@@ -430,7 +430,7 @@ linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.25) 5px,transparent 14px)}
 <i class="lit"></i><i class="shn"></i><i class="pol"></i><i class="bev"></i>
 <i class="brs btl"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#brasscorner"></use></svg></i>
 <i class="brs bbl"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="matrix(1 0 0 -1 0 64)"><use href="#brasscorner"></use></g></svg></i>
-<div class="lb nP nR"><i class="tz tz1"></i><i class="tz tz2"></i><b>Księga</b><b>meldunkowa</b></div>
+<div class="lb nP ledger-title"><span class="ledger-eyebrow">Rejestr osobowy</span><b>Księga</b><b>meldunkowa</b><span class="ledger-imprint">Vellum Roleplay</span></div>
 </div>
 <div class="lg-cv b"><i class="lth"></i><i class="ep"></i></div>
 <i class="sd sdv sdb"></i><i class="sd sdv sdl"></i>
@@ -522,6 +522,7 @@ class Component extends DCLogic {
     const c = this.chars()[i - 1];
     return {
       no: 'REJESTR OSOBOWY  /  STRONA ' + i,
+      paperClass: 'pp paper-page-' + i,
       name: c.first + ' ' + c.last,
       nick: c.nick ? '„' + c.nick + '”' : 'Brak przydomka',
       job: c.grade ? c.job + ', stopień ' + c.grade : c.job,
@@ -568,7 +569,7 @@ class Component extends DCLogic {
         cls: 'sh card sm nb' + (on ? ' up' : '') + (c ? '' : ' free'),
         on: on ? 'true' : 'false',
         no: String(i).padStart(2, '0') + '.',
-        portrait: c ? (c.female ? './assets/portrait-female.png' : './assets/portrait-male.png') : '',
+        portrait: c ? './assets/portraits/' + (c.female ? 'female' : 'male') + '-' + i + '.png' : '',
         portraitAlt: c ? (c.female ? 'Portret kobiety' : 'Portret mężczyzny') : '',
         full: !!c,
         free: !c,

@@ -12,6 +12,8 @@ Nothing to see here!
 
 ![Podgląd interfejsu Vellum](docs/podglad.png)
 
+[Okładka księgi](docs/okladka.png) · [10 sylwetek i 5 rycin](docs/warianty.png)
+
 Pełna strona wraz z grafikami i fontami znajduje się w [`docs`](docs). Nie wymaga npm ani kompilacji. Można wybierać karty postaci, przewracać strony księgi i sprawdzać przyciski. Działanie przycisków w przeglądarce jest demonstracyjne; nie łączy z serwerem RedM.
 
 ### Podgląd online przez GitHub Pages

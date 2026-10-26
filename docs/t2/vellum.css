@@ -118,3 +118,33 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#100c09}
 .t4k .lg-edge{inset:-5px 0 -9px -9px;box-shadow:-2px 3px 3px #21110999,inset 3px 0 8px #553b1b70;border:0}
 .t4k .lg-edge:before{inset:3px 0 4px 3px;box-shadow:-2px 2px 0 #dbc59d,-3px 4px 0 #aa8c5b,0 4px 0 #d8c299;border:0}
 .t4k .lg .lg-pg>.pp{filter:saturate(.78) brightness(.98)}
+
+/* Clear letterpress title: real local type, no texture filter across the letters. */
+@font-face{font-family:Vellum Display;src:url('../assets/fonts/PlayfairDisplay-Italic.ttf') format('truetype');font-weight:400 900;font-style:italic;font-display:swap}
+.t4k .lg-cv.f{filter:none;background-image:linear-gradient(#100a051e,#100a053b),url('../assets/book-leather.png')}
+.t4k .lg-cv.f .ledger-title{filter:none;top:174px;width:340px;margin-left:-170px;padding:25px 22px 23px;transform:none;color:#302116;isolation:isolate}
+.t4k .ledger-title:before{filter:none;border:1px solid #826641;border-radius:2px;background:radial-gradient(ellipse at 20% 5%,#a6804140,transparent 45%),linear-gradient(155deg,#e9dab7,#d8c39a);box-shadow:inset 0 0 0 5px #dbc59f,inset 0 0 0 6px #896e4b99,0 3px 7px #0a050999}
+.t4k .ledger-title:after{display:none}
+.t4k .ledger-title b{font-family:var(--display);font-size:29px;font-weight:700;line-height:1.28;letter-spacing:1.8px;text-transform:uppercase;color:#322217;text-shadow:none}
+.t4k .ledger-title b:first-of-type{font-size:25px;letter-spacing:6px;margin:10px 0 3px}
+.ledger-eyebrow,.ledger-imprint{display:block;font-family:var(--type);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#685035}
+.ledger-imprint{margin-top:15px;font-size:9px;letter-spacing:3.2px}
+.ledger-imprint:before{content:'';display:block;height:1px;width:70px;background:#84633e;opacity:.65;margin:0 auto 12px}
+/* Cinema title treatment stays inside the original left-hand composition. */
+.t4k .vellum-heading{top:60px;text-shadow:0 3px 18px #090503a6}
+.t4k .vellum-heading .brand{font-family:var(--body);font-size:11px;letter-spacing:8px;font-weight:400;color:#ddc79f;gap:25px}
+.t4k .vellum-heading .brand span{height:1px;opacity:.6;max-width:120px}
+.t4k .vellum-heading h1{font-size:92px;line-height:1.15;letter-spacing:-2.4px;font-weight:500;margin-top:19px;color:#f1e5ca}
+.t4k .vellum-heading h1 em{font-weight:500;font-style:italic;color:#dfc79f}
+.t4k .title-rule{width:560px;height:10px;margin-top:7px;opacity:.75}
+.t4k .heading-hint{margin-top:17px;font-size:16px;letter-spacing:.2px;color:#d3c2a1}
+.t4k .vellum-signature .brand{font-family:var(--body);font-size:9px;font-weight:400;letter-spacing:5px;color:#b79d72}
+.t4k .vellum-signature>p+p{font-family:var(--display);font-size:20px;line-height:1.55;font-style:italic;color:#ddc5a1;letter-spacing:.25px;text-shadow:0 2px 12px #000}
+.t4k .vellum-signature>i{width:240px;opacity:.5;margin-top:12px}
+/* Every occupied slot has a distinct silhouette for either gender. */
+.t4k .card-portrait{filter:sepia(.18) brightness(.62) contrast(1.3)}
+.t4k .lg .lg-pg>.paper-page-1{background-image:url('../assets/book-paper.png')}
+.t4k .lg .lg-pg>.paper-page-2{background-image:url('../assets/book-paper-2.png')}
+.t4k .lg .lg-pg>.paper-page-3{background-image:url('../assets/book-paper-3.png')}
+.t4k .lg .lg-pg>.paper-page-4{background-image:url('../assets/book-paper-4.png')}
+.t4k .lg .lg-pg>.paper-page-5{background-image:url('../assets/book-paper-5.png')}
