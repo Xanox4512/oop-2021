@@ -123,8 +123,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#100c09}
 @font-face{font-family:Vellum Display;src:url('../assets/fonts/PlayfairDisplay-Italic.ttf') format('truetype');font-weight:400 900;font-style:italic;font-display:swap}
 .t4k .lg-cv.f{filter:none;background-image:linear-gradient(#100a051e,#100a053b),url('../assets/book-leather.png')}
 .t4k .lg-cv.f .ledger-title{filter:none;top:174px;width:340px;margin-left:-170px;padding:25px 22px 23px;transform:none;color:#302116;isolation:isolate}
-.t4k .ledger-title:before{filter:none;border:1px solid #826641;border-radius:2px;background:radial-gradient(ellipse at 20% 5%,#a6804140,transparent 45%),linear-gradient(155deg,#e9dab7,#d8c39a);box-shadow:inset 0 0 0 5px #dbc59f,inset 0 0 0 6px #896e4b99,0 3px 7px #0a050999}
-.t4k .ledger-title:after{display:none}
+.t4k .ledger-title:before{filter:none;border:1px solid #826641;border-radius:2px;
+background:radial-gradient(ellipse 60px 24px at 3% 3%,#76492369,transparent),radial-gradient(ellipse 32px 65px at 100% 80%,#80512655,transparent),radial-gradient(ellipse 90px 19px at 35% 100%,#8b592b55,transparent),radial-gradient(circle at 86% 16%,#8a582b4a 0 1px,transparent 3px),radial-gradient(circle at 12% 83%,#88572b3b 0 2px,transparent 4px),url('../assets/book-paper.png') center top/100% auto no-repeat,#dfcba3;
+clip-path:polygon(2% 1%,16% 0,28% .8%,42% 0,60% .5%,77% 0,96% .5%,100% 3%,99.5% 18%,100% 36%,99% 38%,100% 41%,99.7% 63%,100% 85%,98% 100%,81% 99.3%,79% 98.4%,76% 100%,56% 99.5%,36% 100%,17% 99.2%,2% 100%,0 97%,.5% 77%,0 61%,.8% 40%,0 20%);
+box-shadow:inset 0 0 13px #74451f70,inset 0 0 0 5px #c7ab7d40}
+.t4k .ledger-title:after{content:'';display:block;position:absolute;inset:8px;z-index:-1;pointer-events:none;border:1px solid #8d704966;border-radius:1px;
+background:linear-gradient(165deg,transparent 21%,#79562e18 21.4%,#fff4d32b 21.8%,transparent 22.3%),linear-gradient(93deg,transparent 74%,#8d61301a 74.4%,#fff5dc38 74.8%,transparent 75.2%);box-shadow:0 0 0 2px #ead8b130}
 .t4k .ledger-title b{font-family:var(--display);font-size:29px;font-weight:700;line-height:1.28;letter-spacing:1.8px;text-transform:uppercase;color:#322217;text-shadow:none}
 .t4k .ledger-title b:first-of-type{font-size:25px;letter-spacing:6px;margin:10px 0 3px}
 .ledger-eyebrow,.ledger-imprint{display:block;font-family:var(--type);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#685035}
@@ -135,7 +139,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#100c09}
 .t4k .vellum-heading .brand{font-family:var(--body);font-size:11px;letter-spacing:8px;font-weight:400;color:#ddc79f;gap:25px}
 .t4k .vellum-heading .brand span{height:1px;opacity:.6;max-width:120px}
 .t4k .vellum-heading h1{font-size:92px;line-height:1.15;letter-spacing:-2.4px;font-weight:500;margin-top:19px;color:#f1e5ca}
-.t4k .vellum-heading h1 em{font-weight:500;font-style:italic;color:#dfc79f}
+.t4k .vellum-heading h1 em{font-weight:500;font-style:italic;color:inherit}
 .t4k .title-rule{width:560px;height:10px;margin-top:7px;opacity:.75}
 .t4k .heading-hint{margin-top:17px;font-size:16px;letter-spacing:.2px;color:#d3c2a1}
 .t4k .vellum-signature .brand{font-family:var(--body);font-size:9px;font-weight:400;letter-spacing:5px;color:#b79d72}
